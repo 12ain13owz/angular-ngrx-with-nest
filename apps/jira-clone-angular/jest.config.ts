@@ -1,8 +1,8 @@
 export default {
-  displayName: 'jira-clone',
+  displayName: 'jira-clone-angular',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/jira-clone',
+  coverageDirectory: '../../coverage/apps/jira-clone-angular',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

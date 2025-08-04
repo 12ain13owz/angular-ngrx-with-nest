@@ -1,0 +1,24 @@
+{
+  "name": "jira-clone-nest-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": [
+    "jira-clone-nest"
+  ],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/jira-clone-nest-e2e/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "dependsOn": [
+        "jira-clone-nest:build",
+        "jira-clone-nest:serve"
+      ]
+    }
+  }
+}

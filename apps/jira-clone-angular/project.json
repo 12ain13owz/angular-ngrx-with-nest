@@ -1,27 +1,27 @@
 {
-  "name": "jira-clone",
+  "name": "jira-clone-angular",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/jira-clone/src",
+  "sourceRoot": "apps/jira-clone-angular/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/jira-clone",
-        "browser": "apps/jira-clone/src/main.ts",
+        "outputPath": "dist/apps/jira-clone-angular",
+        "browser": "apps/jira-clone-angular/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/jira-clone/tsconfig.app.json",
+        "tsConfig": "apps/jira-clone-angular/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/jira-clone/public"
+            "input": "apps/jira-clone-angular/public"
           }
         ],
-        "styles": ["apps/jira-clone/src/styles.scss"]
+        "styles": ["apps/jira-clone-angular/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -52,10 +52,10 @@
       "executor": "@angular/build:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "jira-clone:build:production"
+          "buildTarget": "jira-clone-angular:build:production"
         },
         "development": {
-          "buildTarget": "jira-clone:build:development"
+          "buildTarget": "jira-clone-angular:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -63,7 +63,7 @@
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
       "options": {
-        "buildTarget": "jira-clone:build"
+        "buildTarget": "jira-clone-angular:build"
       }
     },
     "lint": {
@@ -73,16 +73,16 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/jira-clone/jest.config.ts"
+        "jestConfig": "apps/jira-clone-angular/jest.config.ts"
       }
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "jira-clone:build",
+        "buildTarget": "jira-clone-angular:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/jira-clone/browser",
+        "staticFilePath": "dist/apps/jira-clone-angular/browser",
         "spa": true
       }
     }
