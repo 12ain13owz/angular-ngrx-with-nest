@@ -1,0 +1,34 @@
+<div class="h-screen flex items-center justify-center">
+  <p-card [header]="title()" class="w-full max-w-md">
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
+      <app-input
+        [id]="'email'"
+        [type]="'email'"
+        [label]="'Email'"
+        [control]="email"
+        [errorMessage]="validationMessages.email"
+      ></app-input>
+
+      <app-input
+        [id]="'password'"
+        [type]="'password'"
+        [label]="'Password'"
+        [control]="password"
+        [errorMessage]="validationMessages.password"
+      ></app-input>
+      <p-button
+        type="submit"
+        [style]="{ width: '100%' }"
+        [label]="labelButton()"
+        [loading]="isLoading()"
+      ></p-button>
+    </form>
+
+    <div class="mt-8 flex justify-center items-center">
+      {{ labelDescription() }}
+      <a [routerLink]="link()">
+        <p-button [label]="labelLink()" link severity="info" />
+      </a>
+    </div>
+  </p-card>
+</div>
