@@ -18,7 +18,7 @@ export class AuthEffects {
       switchMap((formValue: AuthFormValue) =>
         this.authService.login(formValue).pipe(
           map(res => AuthActions.loginSuccess(res.data)),
-          catchError(error => of(AuthActions.loginFailure({ error: error.message })))
+          catchError(error => of(AuthActions.loginFailure({ error: error })))
         )
       )
     )
@@ -30,7 +30,7 @@ export class AuthEffects {
       switchMap((formValue: AuthFormValue) =>
         this.authService.register(formValue).pipe(
           map(res => AuthActions.registerSuccess(res.data)),
-          catchError(error => of(AuthActions.registerFailure({ error: error.message })))
+          catchError(error => of(AuthActions.registerFailure({ error: error })))
         )
       )
     )
@@ -43,7 +43,7 @@ export class AuthEffects {
         this.authService.logout().pipe(
           map(() => AuthActions.logoutSuccess()),
           tap(() => this.navigation.goToLogin()),
-          catchError(error => of(AuthActions.logoutFailure({ error: error.message })))
+          catchError(error => of(AuthActions.logoutFailure({ error: error })))
         )
       )
     )

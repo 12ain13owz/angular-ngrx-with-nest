@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms'
 export interface AuthState {
   uid: string | null
   email: string | null
-  loading: boolean
+  isLoading: boolean
   error: string | null
 }
 

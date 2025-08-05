@@ -5,7 +5,7 @@ import { AuthActions } from './auth.actions'
 export const initialState: AuthState = {
   uid: null,
   email: null,
-  loading: false,
+  isLoading: false,
   error: null,
 }
 

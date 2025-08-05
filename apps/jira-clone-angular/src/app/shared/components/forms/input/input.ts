@@ -24,7 +24,6 @@ export class Input {
   id = input('')
   label = input('')
   readonly = input(false)
-  disabled = input(false)
   errorMessage = input<Record<string, unknown>>({})
   control = input.required<FormControl<string | null>>()
 

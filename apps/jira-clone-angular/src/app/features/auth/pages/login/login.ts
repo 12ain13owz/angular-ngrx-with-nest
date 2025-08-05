@@ -1,29 +1,40 @@
 import { Component, inject } from '@angular/core'
-import { finalize } from 'rxjs'
+import { map } from 'rxjs'
+import { Store } from '@ngrx/store'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 import { AuthForm } from '../../components/auth-form/auth-form'
-import { AuthService } from '../../../../store/auth/auth.service'
 import { Navigation } from '../../../../services/navigations/navigation.service'
-import { AuthFormValue } from '../../../../store/auth/auth.model'
+import { AuthFormPayload, AuthFormValue } from '../../../../store/auth/auth.model'
+import { selectAuthState } from '../../../../store/auth/auth.selectors'
+import { AuthActions } from '../../../../store/auth/auth.actions'
+import { AsyncPipe } from '@angular/common'
+import { MessageService } from 'primeng/api'
 
 @Component({
   selector: 'app-login',
-  imports: [AuthForm],
+  imports: [AsyncPipe, AuthForm],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-  private authService = inject(AuthService)
-  private natigation = inject(Navigation)
+  private store = inject(Store)
+  private navigation = inject(Navigation)
+  private message = inject(MessageService)
 
-  isLoading = false
-  routes = this.natigation.ROUTES
+  isLoading$ = this.store.select(selectAuthState).pipe(map(state => state.isLoading))
+  error$ = this.store.select(selectAuthState).pipe(map(state => state.error))
+  routes = this.navigation.ROUTES
+
+  constructor() {
+    this.error$.pipe(takeUntilDestroyed()).subscribe(error => {
+      if (!error) return
+      this.message.add({ severity: 'error', summary: 'Error', detail: error })
+    })
+  }
 
   onSubmit(formValue: AuthFormValue) {
-    this.isLoading = true
-    this.authService
-      .login(formValue)
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe(res => this.authService.setAuthDate(res.data, res.accessToken))
+    const payload = formValue as AuthFormPayload
+    this.store.dispatch(AuthActions.login(payload))
   }
 }

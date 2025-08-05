@@ -1,5 +1,5 @@
 <app-auth-form
-  [isLoading]="isLoading"
+  [isLoading]="isLoading$ | async"
   [title]="'Login'"
   [labelButton]="'Login'"
   [link]="routes.AUTH.REGISTER"

@@ -25,7 +25,7 @@ import { AuthFormControls, AuthFormValue } from '../../../../store/auth/auth.mod
 export class AuthForm {
   private fb = inject(FormBuilder)
 
-  isLoading = input(false)
+  isLoading = input<boolean | null>(false)
   title = input('')
   labelButton = input('')
   link = input('#')

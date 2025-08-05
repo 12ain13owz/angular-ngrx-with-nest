@@ -3,12 +3,10 @@ import { inject, Injectable, signal } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { Observable } from 'rxjs'
 import { AuthFormPayload, AuthFormValue, AuthResponse, User } from './auth.model'
-import { MessageService } from 'primeng/api'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient)
-  private messageService = inject(MessageService)
 
   private apiUrl = `${environment.apiUrl}/auth`
   private user = signal<User | null>(null)
@@ -40,23 +38,8 @@ export class AuthService {
     this.accessToken.set(null)
   }
 
-  private mapToPayload(formValue: AuthFormValue): AuthFormPayload | null {
-    if (!formValue.email) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Email is required' })
-      return null
-    }
-
-    if (!formValue.password) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Password is required',
-      })
-      return null
-    }
-
-    const payload = { email: formValue.email, password: formValue.password }
-    return payload
+  private mapToPayload(formValue: AuthFormValue): AuthFormPayload {
+    return { email: formValue.email as string, password: formValue.password as string }
   }
 
   login(formValue: AuthFormValue): Observable<AuthResponse> {

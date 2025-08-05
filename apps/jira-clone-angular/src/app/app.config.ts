@@ -18,7 +18,6 @@ import { authKey } from './store/auth/auth.const'
 import { authReducer } from './store/auth/auth.reducer'
 import { provideHttpClient } from '@angular/common/http'
 import { AuthEffects } from './store/auth/auth.effects'
-import { MessageService } from 'primeng/api'
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({
@@ -41,6 +40,5 @@ export const appConfig: ApplicationConfig = {
     provideRouterStore(),
     provideAnimationsAsync(),
     providePrimeNG({ theme: { preset: Aura } }),
-    MessageService,
   ],
 }
