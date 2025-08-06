@@ -7,6 +7,7 @@
       [readOnly]="readonly()"
       [formControl]="control()"
       [invalid]="control().invalid && control().touched"
+      (blur)="onEmailBlur()"
       class="w-full"
       autocomplete="off"
     />
