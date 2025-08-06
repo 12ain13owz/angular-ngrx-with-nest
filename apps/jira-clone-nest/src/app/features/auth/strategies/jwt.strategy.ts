@@ -1,10 +1,9 @@
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 
 import { ConfigService } from '@nestjs/config'
-
-import { UserResponse } from '../../user/user.types'
+import { ERROR_MESSAGES } from '../../../common/const/error-message.const'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -17,11 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username }
-  }
-
-  async login(user: UserResponse) {
-    // const payload = { email: user.email, sub: user.uid }
-    // return { accessToken: this.jwt}
+    if (!payload) throw new UnauthorizedException(ERROR_MESSAGES.TOKEN_INVALID)
+    return { uid: payload.uid, email: payload.email }
   }
 }
