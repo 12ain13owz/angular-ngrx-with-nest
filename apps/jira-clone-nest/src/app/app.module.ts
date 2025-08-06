@@ -1,9 +1,31 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from '@nestjs/common'
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose'
+import { ConfigModule, ConfigModuleOptions } from '@nestjs/config'
+
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { AuthModule } from './features/auth/auth.module'
+import { UserModule } from './features/user/user.module'
+
+const configOptions: ConfigModuleOptions = {
+  envFilePath: '.env',
+  isGlobal: true,
+}
+
+const mongooseUri = process.env.MONGODB_URI
+const mongooseOptions: MongooseModuleOptions = {
+  user: process.env.MONGODB_USER,
+  pass: process.env.MONGODB_PASS,
+  dbName: process.env.MONGODB_DB,
+}
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot(configOptions),
+    MongooseModule.forRoot(mongooseUri, mongooseOptions),
+    AuthModule,
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
