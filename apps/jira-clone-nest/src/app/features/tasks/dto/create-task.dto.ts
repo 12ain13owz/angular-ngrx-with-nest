@@ -1,9 +1,9 @@
-import { Status } from '../task.model'
+import { TaskStatus } from '../task.model'
 
 export class CreateTaskDto {
   readonly title: string
   readonly description: string
-  readonly status: Status
+  readonly status: TaskStatus
   readonly reporterId: string
   readonly assigneeId?: string
 }

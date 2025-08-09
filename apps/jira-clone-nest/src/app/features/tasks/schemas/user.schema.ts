@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
+import { TaskStatus } from '../task.model'
 
 export type TaskDocument = Task & Document
 
@@ -11,8 +12,8 @@ export class Task {
   @Prop()
   description: string
 
-  @Prop()
-  status: string
+  @Prop({ type: String, enum: TaskStatus, default: TaskStatus.TODO })
+  status: TaskStatus
 
   @Prop()
   reporterId: string
