@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose'
 import { TaskStatus } from '../types/task.type'
 
 @Schema({ timestamps: true })
-export class Task {
+export class Tasks {
   _id?: Types.ObjectId
 
   @Prop()
@@ -25,5 +25,5 @@ export class Task {
   updatedAt?: Date
 }
 
-export const TaskSchema = SchemaFactory.createForClass(Task)
-export type TaskDocument = Task & Document
+export const TasksSchema = SchemaFactory.createForClass(Tasks)
+export type TasksDocument = Tasks & Document

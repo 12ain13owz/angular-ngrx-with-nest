@@ -1,12 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
-import { CreateTaskDto, TaskResponseDto, TasksResponseDto, UpdateTaskDto } from './dto/task.dto'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { CreateTaskDto, TaskResponseDto, TasksResponseDto, UpdateTaskDto } from './dto/tasks.dto'
 import { InjectModel } from '@nestjs/mongoose'
-import { isValidObjectId, Model } from 'mongoose'
-import { Task, TaskDocument } from '../../databases/schemas/task.schema'
+import { Model } from 'mongoose'
+import { Tasks, TasksDocument } from '../../databases/schemas/tasks.schema'
 
 @Injectable()
 export class TasksService {
-  constructor(@InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>) {}
+  constructor(@InjectModel(Tasks.name) private readonly taskModel: Model<TasksDocument>) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     const newTask = await this.taskModel.create(createTaskDto)

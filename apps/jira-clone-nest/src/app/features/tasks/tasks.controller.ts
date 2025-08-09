@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common'
 import { TasksService } from './tasks.service'
-import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto'
+import { CreateTaskDto, UpdateTaskDto } from './dto/tasks.dto'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
