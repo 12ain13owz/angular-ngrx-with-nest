@@ -2,14 +2,21 @@ import { HttpClient } from '@angular/common/http'
 import { inject, Injectable, signal } from '@angular/core'
 import { catchError, map, Observable, of } from 'rxjs'
 
-import { AuthFormPayload, AuthFormValue, AuthResponse, User } from './auth.model'
+import {
+  LoginFormPayload,
+  LoginFormValue,
+  AuthResponse,
+  RegisterFormValue,
+  RegisterFormPayload,
+} from './auth.model'
 import { environment } from '../../../environments/environment'
+import { User } from '../users/users.model'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient)
 
-  private apiUrl = `${environment.apiUrl}`
+  private apiUrl = `${environment.apiUrl}/auth`
   private user = signal<User | null>(null)
   private accessToken = signal<string | null>(null)
 
@@ -47,18 +54,26 @@ export class AuthService {
     localStorage.removeItem('accessToken')
   }
 
-  private mapToPayload(formValue: AuthFormValue): AuthFormPayload {
+  private mapToLogin(formValue: LoginFormValue): LoginFormPayload {
     return { email: formValue.email as string, password: formValue.password as string }
   }
 
-  login(formValue: AuthFormValue): Observable<AuthResponse> {
-    const payload = this.mapToPayload(formValue)
-    const url = `${this.apiUrl}/auth/login`
+  private mapToRegister(formValue: RegisterFormValue): RegisterFormPayload {
+    return {
+      email: formValue.email as string,
+      password: formValue.password as string,
+      name: formValue.name as string,
+    }
+  }
+
+  login(formValue: LoginFormValue): Observable<AuthResponse> {
+    const payload = this.mapToLogin(formValue)
+    const url = `${this.apiUrl}/login`
     return this.http.post<AuthResponse>(url, payload)
   }
 
   private loginWithToken(token: string): Observable<boolean> {
-    const url = `${this.apiUrl}/user/profile`
+    const url = `${this.apiUrl}/profile`
     return this.http.get<User>(url, { headers: { Authorization: `Bearer ${token}` } }).pipe(
       map(res => {
         this.setUser(res)
@@ -71,14 +86,14 @@ export class AuthService {
     )
   }
 
-  register(formValue: AuthFormValue): Observable<AuthResponse> {
-    const payload = this.mapToPayload(formValue)
-    const url = `${this.apiUrl}/user/register`
+  register(formValue: RegisterFormValue): Observable<AuthResponse> {
+    const payload = this.mapToRegister(formValue)
+    const url = `${this.apiUrl}/register`
     return this.http.post<AuthResponse>(url, payload)
   }
 
   logout(): Observable<void> {
-    const url = `${this.apiUrl}/auth/logout`
+    const url = `${this.apiUrl}/logout`
     return this.http.post<void>(url, {})
   }
 }

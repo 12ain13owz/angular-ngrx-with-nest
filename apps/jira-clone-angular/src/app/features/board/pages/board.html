@@ -21,52 +21,20 @@
   </p-menubar>
 
   <main class="flex-grow min-w-[900px] grid grid-cols-3 gap-4 overflow-auto px-4 py-6">
+    @for (column of columns; track column.title) {
     <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event)">
-      <ng-template #title>To Do</ng-template>
+      <ng-template #title>{{ column.title }}</ng-template>
       <p-divider />
 
-      @for (task of todoTasks$ | async; track task._id) {
+      @for (task of column.tasks | async; track task._id) {
       <app-task-card
         pDraggable
         [task]="task"
         (onDragStart)="dragStart(task)"
         (onDragEnd)="dragEnd(task)"
-      >
-        >
-      </app-task-card>
+      ></app-task-card>
       }
     </p-card>
-
-    <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event)">
-      <ng-template #title>In Progress</ng-template>
-      <p-divider />
-
-      @for (task of todoTasks$ | async; track task._id) {
-      <app-task-card
-        pDraggable
-        [task]="task"
-        (onDragStart)="dragStart(task)"
-        (onDragEnd)="dragEnd(task)"
-      >
-        >
-      </app-task-card>
-      }
-    </p-card>
-
-    <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event)">
-      <ng-template #title>Done</ng-template>
-      <p-divider />
-
-      @for (task of todoTasks$ | async; track task._id) {
-      <app-task-card
-        pDraggable
-        [task]="task"
-        (onDragStart)="dragStart(task)"
-        (onDragEnd)="dragEnd(task)"
-      >
-        >
-      </app-task-card>
-      }
-    </p-card>
+    }
   </main>
 </div>

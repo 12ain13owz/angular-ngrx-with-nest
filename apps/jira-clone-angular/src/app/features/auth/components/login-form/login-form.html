@@ -1,6 +1,6 @@
 <div class="h-screen flex items-center justify-center">
-  <p-card [header]="title()" class="w-full max-w-md">
-    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
+  <p-card header="Login" class="w-full max-w-md">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
       <app-input
         [id]="'email'"
         [type]="'email'"
@@ -18,16 +18,16 @@
       ></app-input>
       <p-button
         type="submit"
-        [style]="{ width: '100%' }"
-        [label]="labelButton()"
+        label="Login"
         [loading]="isLoading()"
+        [style]="{ width: '100%' }"
       ></p-button>
     </form>
 
     <div class="mt-8 flex justify-center items-center">
-      {{ labelDescription() }}
+      Don't have an account?
       <a [routerLink]="link()">
-        <p-button [label]="labelLink()" link severity="info" />
+        <p-button label="Register" link severity="info" />
       </a>
     </div>
   </p-card>

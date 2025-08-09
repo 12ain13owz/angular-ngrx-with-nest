@@ -10,4 +10,7 @@ export const validationMessages = {
     pattern:
       'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
   },
+  name: {
+    required: 'Name is required',
+  },
 } as const

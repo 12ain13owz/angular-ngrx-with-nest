@@ -15,47 +15,47 @@ import {
   PATTERN_PASSWORD,
   validationMessages,
 } from '../../../../shared/const/validations/validation.const'
-import { AuthFormControls, AuthFormValue } from '../../../../store/auth/auth.model'
+import { RegisterFormControls, RegisterFormValue } from '../../../../store/auth/auth.model'
 
 @Component({
-  selector: 'app-auth-form',
+  selector: 'app-register-form',
   imports: [RouterModule, ReactiveFormsModule, CardModule, ButtonModule, Input],
-  templateUrl: './auth-form.html',
-  styleUrl: './auth-form.scss',
+  templateUrl: './register-form.html',
+  styleUrl: './register-form.scss',
 })
-export class AuthForm {
+export class RegisterForm {
   private fb = inject(FormBuilder)
 
   isLoading = input<boolean | null>(false)
-  title = input('')
-  labelButton = input('')
   link = input('#')
-  labelLink = input('')
-  labelDescription = input('')
-  formSubmit = output<AuthFormValue>()
+  formSubmit = output<RegisterFormValue>()
 
-  authForm: FormGroup<AuthFormControls>
+  registerForm: FormGroup<RegisterFormControls>
   validationMessages = validationMessages
 
   constructor() {
-    this.authForm = this.fb.nonNullable.group({
+    this.registerForm = this.fb.nonNullable.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(PATTERN_PASSWORD)]],
+      name: ['', [Validators.required]],
     })
   }
-
   get email(): FormControl<string> {
-    return this.authForm.controls.email
+    return this.registerForm.controls.email
   }
 
   get password(): FormControl<string> {
-    return this.authForm.controls.password
+    return this.registerForm.controls.password
+  }
+
+  get name(): FormControl<string> {
+    return this.registerForm.controls.name
   }
 
   onSubmit() {
-    this.authForm.markAllAsTouched()
-    if (this.authForm.invalid) return
+    this.registerForm.markAllAsTouched()
+    if (this.registerForm.invalid) return
 
-    this.formSubmit.emit(this.authForm.value)
+    this.formSubmit.emit(this.registerForm.value)
   }
 }

@@ -4,9 +4,9 @@ import { authKey } from './auth.const'
 import { AuthState } from './auth.model'
 
 export const selectAuthState = createFeatureSelector<AuthState>(authKey)
-export const selectIsLoggedIn = createSelector(selectAuthState, (state: AuthState) => !!state.uid)
+export const selectIsLoggedIn = createSelector(selectAuthState, (state: AuthState) => !!state._id)
 export const selectUser = createSelector(selectAuthState, (state: AuthState) => ({
-  uid: state.uid,
+  uid: state._id,
   email: state.email,
 }))
-export const selectCurrentUser = createSelector(selectAuthState, (state: AuthState) => state.uid)
+export const selectCurrentUser = createSelector(selectAuthState, (state: AuthState) => state._id)

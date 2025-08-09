@@ -1,4 +1,5 @@
 import { AsyncPipe } from '@angular/common'
+import { HttpErrorResponse } from '@angular/common/http'
 import { Component, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Store } from '@ngrx/store'
@@ -7,13 +8,13 @@ import { map } from 'rxjs'
 
 import { Navigation } from '../../../../services/navigations/navigation.service'
 import { AuthActions } from '../../../../store/auth/auth.actions'
-import { AuthFormPayload, AuthFormValue } from '../../../../store/auth/auth.model'
+import { LoginFormPayload, LoginFormValue } from '../../../../store/auth/auth.model'
 import { selectAuthState } from '../../../../store/auth/auth.selectors'
-import { AuthForm } from '../../components/auth-form/auth-form'
+import { RegisterForm } from '../../components/register-form/register-form'
 
 @Component({
   selector: 'app-register',
-  imports: [AsyncPipe, AuthForm],
+  imports: [AsyncPipe, RegisterForm],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -29,12 +30,14 @@ export class Register {
   constructor() {
     this.error$.pipe(takeUntilDestroyed()).subscribe(error => {
       if (!error) return
-      this.message.add({ severity: 'error', summary: 'Error', detail: error })
+
+      const err = error as unknown as HttpErrorResponse
+      this.message.add({ severity: 'error', summary: 'Error', detail: err.message })
     })
   }
 
-  onSubmit(formValue: AuthFormValue) {
-    const payload = formValue as AuthFormPayload
+  onSubmit(formValue: LoginFormValue) {
+    const payload = formValue as LoginFormPayload
     this.store.dispatch(AuthActions.register(payload))
   }
 }

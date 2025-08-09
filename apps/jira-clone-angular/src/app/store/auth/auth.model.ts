@@ -1,29 +1,30 @@
 import { FormControl, FormGroup } from '@angular/forms'
 
+import { User } from '../users/users.model'
+
 export interface AuthState {
-  uid: string | null
+  _id: string | null
   email: string | null
   isLoading: boolean
   error: string | null
 }
 
-export interface AuthFormControls {
+export interface LoginFormControls {
   email: FormControl<string>
   password: FormControl<string>
 }
 
-export type AuthFormValue = FormGroup<AuthFormControls>['value']
-export type AuthFormPayload = Required<AuthFormValue>
+export type LoginFormValue = FormGroup<LoginFormControls>['value']
+export type LoginFormPayload = Required<LoginFormValue>
 
-export interface AuthResponse {
-  data: {
-    uid: string
-    email: string
-  }
-  accessToken: string
+export interface RegisterFormControls extends LoginFormControls {
+  name: FormControl<string>
 }
 
-export interface User {
-  uid: string
-  email: string
+export type RegisterFormValue = FormGroup<RegisterFormControls>['value']
+export type RegisterFormPayload = Required<RegisterFormValue>
+
+export interface AuthResponse {
+  data: User
+  accessToken: string
 }

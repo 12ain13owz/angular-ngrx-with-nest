@@ -4,7 +4,7 @@ import { AuthActions } from './auth.actions'
 import { AuthState } from './auth.model'
 
 export const initialState: AuthState = {
-  uid: null,
+  _id: null,
   email: null,
   isLoading: false,
   error: null,
@@ -19,9 +19,9 @@ export const authReducer = createReducer(
     error: null,
   })),
 
-  on(AuthActions.loginSuccess, AuthActions.registerSuccess, (state, { uid, email }) => ({
+  on(AuthActions.loginSuccess, AuthActions.registerSuccess, (state, { _id, email }) => ({
     ...state,
-    uid,
+    _id,
     email,
     isLoading: false,
     error: null,

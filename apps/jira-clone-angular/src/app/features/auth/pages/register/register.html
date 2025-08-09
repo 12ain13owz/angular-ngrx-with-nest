@@ -1,9 +1,5 @@
-<app-auth-form
+<app-register-form
   [isLoading]="isLoading$ | async"
-  [title]="'Register'"
-  [labelButton]="'Register'"
   [link]="routes.AUTH.LOGIN"
-  [labelLink]="'Login'"
-  [labelDescription]="'Already have an account?'"
   (formSubmit)="onSubmit($event)"
-></app-auth-form>
+></app-register-form>

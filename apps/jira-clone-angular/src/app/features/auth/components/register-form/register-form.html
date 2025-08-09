@@ -1,0 +1,42 @@
+<div class="h-screen flex items-center justify-center">
+  <p-card header="Register" class="w-full max-w-md">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
+      <app-input
+        [id]="'email'"
+        [type]="'email'"
+        [label]="'Email'"
+        [control]="email"
+        [errorMessage]="validationMessages.email"
+      ></app-input>
+
+      <app-input
+        [id]="'password'"
+        [type]="'password'"
+        [label]="'Password'"
+        [control]="password"
+        [errorMessage]="validationMessages.password"
+      ></app-input>
+
+      <app-input
+        [id]="'name'"
+        [type]="'text'"
+        [label]="'Name'"
+        [control]="name"
+        [errorMessage]="validationMessages.name"
+      ></app-input>
+      <p-button
+        type="submit"
+        label="Register"
+        [loading]="isLoading()"
+        [style]="{ width: '100%' }"
+      ></p-button>
+    </form>
+
+    <div class="mt-8 flex justify-center items-center">
+      Already have an account?
+      <a [routerLink]="link()">
+        <p-button label="Login" link severity="info" />
+      </a>
+    </div>
+  </p-card>
+</div>

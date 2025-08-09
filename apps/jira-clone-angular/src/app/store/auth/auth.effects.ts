@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, finalize, map, of, switchMap, tap } from 'rxjs'
 
 import { AuthActions } from './auth.actions'
-import { AuthFormValue } from './auth.model'
+import { LoginFormValue } from './auth.model'
 import { AuthService } from './auth.service'
 import { Navigation } from '../../services/navigations/navigation.service'
 
@@ -16,11 +16,11 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.action$.pipe(
       ofType(AuthActions.login),
-      switchMap((formValue: AuthFormValue) =>
+      switchMap((formValue: LoginFormValue) =>
         this.authService.login(formValue).pipe(
           tap(res => this.authService.setAuthDate(res.data, res.accessToken)),
           map(res => AuthActions.loginSuccess(res.data)),
-          catchError(error => of(AuthActions.loginFailure({ error: error })))
+          catchError(error => of(AuthActions.loginFailure(error)))
         )
       )
     )
@@ -29,10 +29,10 @@ export class AuthEffects {
   register$ = createEffect(() =>
     this.action$.pipe(
       ofType(AuthActions.register),
-      switchMap((formValue: AuthFormValue) =>
+      switchMap((formValue: LoginFormValue) =>
         this.authService.register(formValue).pipe(
           map(res => AuthActions.registerSuccess(res.data)),
-          catchError(error => of(AuthActions.registerFailure({ error: error })))
+          catchError(error => of(AuthActions.registerFailure(error)))
         )
       )
     )
@@ -45,7 +45,7 @@ export class AuthEffects {
         this.authService.logout().pipe(
           map(() => AuthActions.logoutSuccess()),
           tap(() => this.navigation.goToLogin()),
-          catchError(error => of(AuthActions.logoutFailure({ error: error }))),
+          catchError(error => of(AuthActions.logoutFailure(error))),
           finalize(() => this.authService.clearAuthData())
         )
       )
