@@ -1,44 +1,46 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateTaskDto } from './dto/create-task.dto'
-import { UpdateTaskDto } from './dto/update-task.dto'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { CreateTaskDto, TaskResponseDto, TasksResponseDto, UpdateTaskDto } from './dto/task.dto'
 import { InjectModel } from '@nestjs/mongoose'
-import { Task, TaskDocument } from './schemas/user.schema'
-import { Model } from 'mongoose'
+import { isValidObjectId, Model } from 'mongoose'
+import { Task, TaskDocument } from '../../databases/schemas/task.schema'
 
 @Injectable()
 export class TasksService {
   constructor(@InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     const newTask = await this.taskModel.create(createTaskDto)
-    return newTask
+    return new TaskResponseDto(newTask)
   }
 
-  async findAll(): Promise<Task[]> {
+  async findAll(): Promise<TasksResponseDto | []> {
     const tasks = await this.taskModel.find().exec()
-    return tasks
+    return new TasksResponseDto(tasks)
   }
 
-  async findOne(id: string): Promise<Task> {
+  async findOne(id: string): Promise<TaskResponseDto | null | NotFoundException> {
     const task = await this.taskModel.findById(id).exec()
     if (!task) throw new NotFoundException(`Task with ID "${id}" not found.`)
 
-    return task
+    return new TaskResponseDto(task)
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+  async update(
+    id: string,
+    updateTaskDto: UpdateTaskDto
+  ): Promise<TaskResponseDto | NotFoundException> {
     const updatedTask = await this.taskModel
       .findByIdAndUpdate(id, updateTaskDto, { new: true })
       .exec()
     if (!updatedTask) throw new NotFoundException(`Task with ID "${id}" not found.`)
 
-    return updatedTask
+    return new TaskResponseDto(updatedTask)
   }
 
-  async remove(id: string): Promise<Task> {
+  async remove(id: string): Promise<TaskResponseDto | NotFoundException> {
     const deletedTask = await this.taskModel.findByIdAndDelete(id).exec()
     if (!deletedTask) throw new NotFoundException(`Task with ID "${id}" not found.`)
 
-    return deletedTask
+    return new TaskResponseDto(deletedTask)
   }
 }
