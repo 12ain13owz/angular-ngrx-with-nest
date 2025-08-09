@@ -7,13 +7,14 @@ import {
   Validators,
 } from '@angular/forms'
 import { RouterModule } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
+import { CardModule } from 'primeng/card'
+
+import { Input } from '../../../../shared/components/forms/input/input'
 import {
   PATTERN_PASSWORD,
   validationMessages,
 } from '../../../../shared/const/validations/validation.const'
-import { CardModule } from 'primeng/card'
-import { ButtonModule } from 'primeng/button'
-import { Input } from '../../../../shared/components/forms/input/input'
 import { AuthFormControls, AuthFormValue } from '../../../../store/auth/auth.model'
 
 @Component({

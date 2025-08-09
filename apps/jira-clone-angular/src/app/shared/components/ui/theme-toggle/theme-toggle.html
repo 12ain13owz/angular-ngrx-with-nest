@@ -1,0 +1,7 @@
+<p-button
+  [icon]="isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+  [severity]="isDarkMode() ? 'warn' : 'help'"
+  [text]="true"
+  [rounded]="true"
+  (click)="toggleTheme()"
+/>

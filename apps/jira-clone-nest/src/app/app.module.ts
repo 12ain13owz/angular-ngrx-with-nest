@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose'
 import { ConfigModule, ConfigModuleOptions } from '@nestjs/config'
-
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './features/auth/auth.module'

@@ -1,6 +1,7 @@
 import { Route } from '@angular/router'
-import { Dashboard } from './layouts/dashboard'
+
 import { authGuard } from './features/auth/guards/auth.guard'
+import { Dashboard } from './layouts/dashboard'
 
 export const appRoutes: Route[] = [
   {

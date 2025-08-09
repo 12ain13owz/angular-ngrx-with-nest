@@ -1,15 +1,15 @@
+import { AsyncPipe } from '@angular/common'
 import { Component, inject } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Store } from '@ngrx/store'
+import { MessageService } from 'primeng/api'
 import { map } from 'rxjs'
 
-import { AuthForm } from '../../components/auth-form/auth-form'
 import { Navigation } from '../../../../services/navigations/navigation.service'
-import { AuthFormPayload, AuthFormValue } from '../../../../store/auth/auth.model'
-import { MessageService } from 'primeng/api'
-import { Store } from '@ngrx/store'
-import { selectAuthState } from '../../../../store/auth/auth.selectors'
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { AuthActions } from '../../../../store/auth/auth.actions'
-import { AsyncPipe } from '@angular/common'
+import { AuthFormPayload, AuthFormValue } from '../../../../store/auth/auth.model'
+import { selectAuthState } from '../../../../store/auth/auth.selectors'
+import { AuthForm } from '../../components/auth-form/auth-form'
 
 @Component({
   selector: 'app-register',

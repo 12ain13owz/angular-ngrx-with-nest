@@ -1,7 +1,9 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ToastModule } from 'primeng/toast'
+
+import { ThemeService } from './services/themes/theme.service'
 
 @Component({
   imports: [RouterModule, ToastModule],
@@ -11,5 +13,9 @@ import { ToastModule } from 'primeng/toast'
   providers: [MessageService],
 })
 export class App {
-  protected title = 'jira-clone-angular'
+  private themeService = inject(ThemeService)
+
+  constructor() {
+    this.themeService.initializeTheme()
+  }
 }

@@ -22,4 +22,8 @@ export class AuthService {
     const payload = { email: user.email, sub: user.uid }
     return { accessToken: this.jwtService.sign(payload) }
   }
+
+  async logout(): Promise<{ message: string }> {
+    return { message: 'ok' }
+  }
 }

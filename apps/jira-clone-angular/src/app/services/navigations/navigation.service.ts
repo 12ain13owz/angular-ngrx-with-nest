@@ -12,9 +12,7 @@ export class Navigation {
       LOGIN: '/auth/login',
       REGISTER: '/auth/register',
     },
-    BOARD: {
-      BOARD: '/board',
-    },
+    BOARD: '/board',
   } as const
 
   private navigate(path: string) {
@@ -30,6 +28,6 @@ export class Navigation {
   }
 
   goToBoard() {
-    this.navigate(this.ROUTES.BOARD.BOARD)
+    this.navigate(this.ROUTES.BOARD)
   }
 }

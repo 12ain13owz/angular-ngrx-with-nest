@@ -10,11 +10,14 @@ export class AuthController {
   @Post('/login')
   async login(@Request() req) {
     const { accessToken } = await this.authService.login(req.user)
-    const result = {
-      data: req.user,
-      accessToken: accessToken,
-    }
+    const result = { data: req.user, accessToken: accessToken }
 
+    return result
+  }
+
+  @Post('/logout')
+  async logout() {
+    const result = await this.authService.logout()
     return result
   }
 }

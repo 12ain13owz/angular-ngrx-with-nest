@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing'
 
-import { Navigation } from './navigation.service'
+import { ThemeService } from './theme.service'
 
-describe('NavigationService', () => {
-  let service: Navigation
+describe('ThemeService', () => {
+  let service: ThemeService
 
   beforeEach(() => {
     TestBed.configureTestingModule({})
-    service = TestBed.inject(Navigation)
+    service = TestBed.inject(ThemeService)
   })
 
   it('should be created', () => {

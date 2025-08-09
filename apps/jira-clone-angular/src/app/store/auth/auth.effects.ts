@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { AuthService } from './auth.service'
+import { catchError, finalize, map, of, switchMap, tap } from 'rxjs'
+
 import { AuthActions } from './auth.actions'
-import { catchError, map, of, switchMap, tap } from 'rxjs'
-import { Navigation } from '../../services/navigations/navigation.service'
 import { AuthFormValue } from './auth.model'
+import { AuthService } from './auth.service'
+import { Navigation } from '../../services/navigations/navigation.service'
 
 @Injectable()
 export class AuthEffects {
@@ -17,6 +18,7 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap((formValue: AuthFormValue) =>
         this.authService.login(formValue).pipe(
+          tap(res => this.authService.setAuthDate(res.data, res.accessToken)),
           map(res => AuthActions.loginSuccess(res.data)),
           catchError(error => of(AuthActions.loginFailure({ error: error })))
         )
@@ -43,7 +45,8 @@ export class AuthEffects {
         this.authService.logout().pipe(
           map(() => AuthActions.logoutSuccess()),
           tap(() => this.navigation.goToLogin()),
-          catchError(error => of(AuthActions.logoutFailure({ error: error })))
+          catchError(error => of(AuthActions.logoutFailure({ error: error }))),
+          finalize(() => this.authService.clearAuthData())
         )
       )
     )

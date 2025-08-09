@@ -1,15 +1,15 @@
+import { AsyncPipe } from '@angular/common'
 import { Component, inject } from '@angular/core'
-import { map } from 'rxjs'
-import { Store } from '@ngrx/store'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Store } from '@ngrx/store'
+import { MessageService } from 'primeng/api'
+import { map } from 'rxjs'
 
-import { AuthForm } from '../../components/auth-form/auth-form'
 import { Navigation } from '../../../../services/navigations/navigation.service'
+import { AuthActions } from '../../../../store/auth/auth.actions'
 import { AuthFormPayload, AuthFormValue } from '../../../../store/auth/auth.model'
 import { selectAuthState } from '../../../../store/auth/auth.selectors'
-import { AuthActions } from '../../../../store/auth/auth.actions'
-import { AsyncPipe } from '@angular/common'
-import { MessageService } from 'primeng/api'
+import { AuthForm } from '../../components/auth-form/auth-form'
 
 @Component({
   selector: 'app-login',
@@ -30,6 +30,7 @@ export class Login {
     this.error$.pipe(takeUntilDestroyed()).subscribe(error => {
       if (!error) return
       this.message.add({ severity: 'error', summary: 'Error', detail: error })
+      console.log(error)
     })
   }
 

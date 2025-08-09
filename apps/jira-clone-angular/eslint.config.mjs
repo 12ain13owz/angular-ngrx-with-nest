@@ -1,5 +1,6 @@
 import nx from '@nx/eslint-plugin'
 import baseConfig from '../../eslint.config.mjs'
+import importPlugin from 'eslint-plugin-import'
 
 export default [
   ...baseConfig,
@@ -7,7 +8,9 @@ export default [
   ...nx.configs['flat/angular-template'],
   {
     files: ['**/*.ts'],
+    plugins: { import: importPlugin },
     rules: {
+      '@angular-eslint/prefer-standalone': 'off',
       '@angular-eslint/directive-selector': [
         'error',
         {
@@ -22,6 +25,32 @@ export default [
           type: 'element',
           prefix: 'app',
           style: 'kebab-case',
+        },
+      ],
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling'],
+            'index',
+            'object',
+            'type',
+          ],
+          pathGroups: [
+            {
+              pattern: '@angular/**',
+              group: 'external',
+              position: 'before',
+            },
+          ],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+          'newlines-between': 'always',
         },
       ],
     },

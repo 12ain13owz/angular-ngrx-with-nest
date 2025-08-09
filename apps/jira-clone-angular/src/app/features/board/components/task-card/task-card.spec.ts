@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { Register } from './register'
+import { TaskCard } from './task-card'
 
-describe('Register', () => {
-  let component: Register
-  let fixture: ComponentFixture<Register>
+describe('TaskCard', () => {
+  let component: TaskCard
+  let fixture: ComponentFixture<TaskCard>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Register],
+      imports: [TaskCard],
     }).compileComponents()
 
-    fixture = TestBed.createComponent(Register)
+    fixture = TestBed.createComponent(TaskCard)
     component = fixture.componentInstance
     fixture.detectChanges()
   })
