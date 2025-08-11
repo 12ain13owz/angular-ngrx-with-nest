@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-1">
+  <p-floatlabel variant="on">
+    <p-select
+      [inputId]="id()"
+      [readonly]="readonly()"
+      [formControl]="control()"
+      [invalid]="control().invalid && control().touched"
+      [options]="options()"
+      class="w-full"
+    />
+    <label [for]="id()">{{ label() }}</label>
+  </p-floatlabel>
+
+  <p-message severity="error" size="small" variant="simple">
+    <app-error-field [control]="control()" [errorMessage]="errorMessage()"></app-error-field>
+  </p-message>
+</div>

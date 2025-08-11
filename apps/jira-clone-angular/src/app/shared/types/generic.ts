@@ -3,3 +3,5 @@ export interface Message {
 }
 
 export type HTMLInputType = 'text' | 'email' | 'password' | 'number' | 'tel'
+
+export type FormMode = 'create' | 'update'

@@ -1,22 +1,15 @@
 import { Component, computed, input, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { InputTextModule } from 'primeng/inputtext'
 import { FloatLabel } from 'primeng/floatlabel'
+import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
-import { ErrorField } from '../error-field/error-field'
-import { CommonModule } from '@angular/common'
+
 import { HTMLInputType } from '../../../types/generic'
+import { ErrorField } from '../error-field/error-field'
 
 @Component({
   selector: 'app-input',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    FloatLabel,
-    MessageModule,
-    ErrorField,
-  ],
+  imports: [ReactiveFormsModule, InputTextModule, FloatLabel, MessageModule, ErrorField],
   templateUrl: './input.html',
   styleUrl: './input.scss',
 })

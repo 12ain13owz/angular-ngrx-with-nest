@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { Task, TaskResponse } from './tasks.model'
+import { Tasks, TasksResponse } from './tasks.model'
 import { environment } from '../../../environments/environment'
 
 @Injectable({
@@ -12,19 +12,19 @@ export class TasksService {
   private http = inject(HttpClient)
   private apiUrl = `${environment.apiUrl}/tasks`
 
-  getTasks(): Observable<TaskResponse> {
-    return this.http.get<TaskResponse>(this.apiUrl)
+  getTasks(): Observable<TasksResponse> {
+    return this.http.get<TasksResponse>(this.apiUrl)
   }
 
-  addTask(task: Omit<Task, '_id'>): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, task)
+  addTask(task: Omit<Tasks, '_id'>): Observable<Tasks> {
+    return this.http.post<Tasks>(this.apiUrl, task)
   }
 
-  updateTask(task: Partial<Task> & { _id: string }): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${task._id}`, task)
+  updateTask(task: Partial<Tasks> & { _id: string }): Observable<Tasks> {
+    return this.http.patch<Tasks>(`${this.apiUrl}/${task._id}`, task)
   }
 
-  deleteTask(_id: string): Observable<Task> {
-    return this.http.delete<Task>(`${this.apiUrl}/${_id}`)
+  deleteTask(_id: string): Observable<Tasks> {
+    return this.http.delete<Tasks>(`${this.apiUrl}/${_id}`)
   }
 }

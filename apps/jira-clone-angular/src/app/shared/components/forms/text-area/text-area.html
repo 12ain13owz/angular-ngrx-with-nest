@@ -1,0 +1,19 @@
+<div class="flex flex-col gap-1">
+  <p-iftalabel>
+    <textarea
+      pTextarea
+      [id]="id()"
+      [readonly]="readonly()"
+      [formControl]="control()"
+      [invalid]="control().invalid && control().touched"
+      [rows]="rows()"
+      [cols]="cols()"
+      class="w-full"
+    ></textarea>
+    <label [for]="id()">{{ label() }}</label>
+  </p-iftalabel>
+
+  <p-message severity="error" size="small" variant="simple">
+    <app-error-field [control]="control()" [errorMessage]="errorMessage()"></app-error-field>
+  </p-message>
+</div>

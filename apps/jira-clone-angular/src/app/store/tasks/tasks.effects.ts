@@ -8,13 +8,13 @@ import { TasksService } from './tasks.service'
 @Injectable()
 export class TasksEffects {
   private actions$ = inject(Actions)
-  private tasksServiec = inject(TasksService)
+  private tasksService = inject(TasksService)
 
   loadTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksActions.loadTasks),
       switchMap(() =>
-        this.tasksServiec.getTasks().pipe(
+        this.tasksService.getTasks().pipe(
           map(res => TasksActions.loadTasksSuccess({ tasks: res.tasks })),
           catchError(error => of(TasksActions.loadTasksFailure({ error: error.message })))
         )
@@ -24,11 +24,11 @@ export class TasksEffects {
 
   addTask$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TasksActions.addTask),
-      switchMap(({ task }) =>
-        this.tasksServiec.addTask(task).pipe(
-          map(task => TasksActions.addTaskSuccess({ task })),
-          catchError(error => of(TasksActions.addTaskFailure({ error: error.message })))
+      ofType(TasksActions.addTasks),
+      switchMap(({ tasks }) =>
+        this.tasksService.addTask(tasks).pipe(
+          map(tasks => TasksActions.addTasksSuccess({ tasks })),
+          catchError(error => of(TasksActions.addTasksFailure({ error: error.message })))
         )
       )
     )
@@ -36,11 +36,11 @@ export class TasksEffects {
 
   updateTask$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TasksActions.updateTask),
-      switchMap(({ task }) =>
-        this.tasksServiec.updateTask(task).pipe(
-          map(task => TasksActions.updateTaskSuccess({ task })),
-          catchError(error => of(TasksActions.updateTaskFailure({ error: error.message })))
+      ofType(TasksActions.updateTasks),
+      switchMap(({ tasks }) =>
+        this.tasksService.updateTask(tasks).pipe(
+          map(tasks => TasksActions.updateTasksSuccess({ tasks })),
+          catchError(error => of(TasksActions.updateTasksFailure({ error: error.message })))
         )
       )
     )
@@ -48,11 +48,11 @@ export class TasksEffects {
 
   deleteTask$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TasksActions.deleteTask),
+      ofType(TasksActions.deleteTasks),
       switchMap(({ _id }) =>
-        this.tasksServiec.deleteTask(_id).pipe(
-          map(() => TasksActions.deleteTaskSuccess({ _id })),
-          catchError(error => of(TasksActions.deleteTaskFailure({ error: error.message })))
+        this.tasksService.deleteTask(_id).pipe(
+          map(() => TasksActions.deleteTasksSuccess({ _id })),
+          catchError(error => of(TasksActions.deleteTasksFailure({ error: error.message })))
         )
       )
     )

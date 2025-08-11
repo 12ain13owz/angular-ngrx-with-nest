@@ -1,5 +1,5 @@
 import { TasksDocument } from '../../../databases/schemas/tasks.schema'
-import { TaskStatus } from '../../../databases/types/task.type'
+import { TaskStatus } from '../../../databases/types/tasks.type'
 
 export class CreateTaskDto {
   title: string

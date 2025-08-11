@@ -15,11 +15,19 @@ import {
   PATTERN_PASSWORD,
   validationMessages,
 } from '../../../../shared/const/validations/validation.const'
+import { FormMarkAllAsTouched } from '../../../../shared/directives/form/form.directive'
 import { RegisterFormControls, RegisterFormValue } from '../../../../store/auth/auth.model'
 
 @Component({
   selector: 'app-register-form',
-  imports: [RouterModule, ReactiveFormsModule, CardModule, ButtonModule, Input],
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    Input,
+    FormMarkAllAsTouched,
+  ],
   templateUrl: './register-form.html',
   styleUrl: './register-form.scss',
 })
@@ -53,9 +61,7 @@ export class RegisterForm {
   }
 
   onSubmit() {
-    this.registerForm.markAllAsTouched()
     if (this.registerForm.invalid) return
-
     this.formSubmit.emit(this.registerForm.value)
   }
 }

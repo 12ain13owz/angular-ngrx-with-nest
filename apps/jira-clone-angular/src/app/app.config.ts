@@ -22,6 +22,8 @@ import { AuthEffects } from './store/auth/auth.effects'
 import { authReducer } from './store/auth/auth.reducer'
 import { TasksEffects } from './store/tasks/tasks.effects'
 import { tasksReducer } from './store/tasks/tasks.reducer'
+import { UsersEffects } from './store/users/users.effects'
+import { usersReducers } from './store/users/users.reducer'
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({
@@ -35,8 +37,9 @@ const rootReducers = {
   router: routerReducer,
   auth: authReducer,
   tasks: tasksReducer,
+  users: usersReducers,
 }
-const rootEffects = [AuthEffects, TasksEffects]
+const rootEffects = [AuthEffects, TasksEffects, UsersEffects]
 
 export const appConfig: ApplicationConfig = {
   providers: [

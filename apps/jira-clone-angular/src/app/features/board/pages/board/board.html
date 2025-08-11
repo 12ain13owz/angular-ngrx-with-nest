@@ -1,0 +1,84 @@
+<div class="flex flex-col min-h-screen">
+  <p-menubar>
+    <ng-template pTemplate="start">
+      <span class="text-xl font-semibold">Ngrx Jira Clone</span>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+      <div class="flex items-center gap-3 px-4">
+        <span class="text-gray-400 font-medium">{{ email$ | async }}</span>
+        <app-theme-toggle></app-theme-toggle>
+
+        <p-button
+          [rounded]="true"
+          icon="pi pi-sign-out"
+          variant="outlined"
+          severity="help"
+          (click)="onLogout()"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-menubar>
+
+  <main class="flex-grow min-w-[900px] grid grid-cols-3 gap-4 overflow-auto px-4 py-6">
+    @for (column of columns; track column.title) {
+    <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event, column.title)">
+      @if (column.title === 'To Do') {
+      <ng-template #title>
+        <div class="flex justify-between items-center">
+          <span>{{ column.title }}</span>
+          <p-button
+            [rounded]="true"
+            icon="pi pi-plus"
+            variant="outlined"
+            size="small"
+            (click)="onCreateTasksForm()"
+          ></p-button>
+        </div>
+      </ng-template>
+
+      } @else {
+      <ng-template #title>{{ column.title }}</ng-template>
+      }
+      <p-divider />
+
+      @for (tasks of column.tasks | async; track tasks._id) {
+      <app-tasks-card
+        pDraggable
+        [tasks]="tasks"
+        [users]="users$ | async"
+        (onDragStart)="dragStart(tasks)"
+        (onDragEnd)="dragEnd()"
+        (editClicked)="onEditTasksForm($event)"
+      ></app-tasks-card>
+      }
+    </p-card>
+    }
+  </main>
+</div>
+
+<p-dialog
+  [(visible)]="visible"
+  modal="true"
+  [style]="{ width: '50rem', height: 'auto' }"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+  <ng-template #header>
+    @if (mode === 'create') {
+    <span>Create Tasks</span>
+    } @else {
+    <span>Edit Tasks</span>
+    }
+  </ng-template>
+
+  @if (visible) {
+  <app-tasks-form
+    [mode]="mode"
+    [tasks]="tasks"
+    [users]="users$ | async"
+    (formSubmit)="onTasksFormSubmit($event)"
+    (cancelClicked)="onCloseTasksForm()"
+    (deleteClicked)="onDeleteTasks($event)"
+  ></app-tasks-form>
+  }
+</p-dialog>

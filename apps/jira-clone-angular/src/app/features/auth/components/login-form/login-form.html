@@ -1,6 +1,11 @@
 <div class="h-screen flex items-center justify-center">
   <p-card header="Login" class="w-full max-w-md">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      appMarkAllAsTouched
+      class="flex flex-col gap-4 mt-4"
+    >
       <app-input
         [id]="'email'"
         [type]="'email'"

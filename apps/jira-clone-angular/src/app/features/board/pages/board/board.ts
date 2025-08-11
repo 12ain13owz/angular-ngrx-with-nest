@@ -1,0 +1,225 @@
+import { AsyncPipe } from '@angular/common'
+import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Actions, ofType } from '@ngrx/effects'
+import { Store } from '@ngrx/store'
+import { MessageService } from 'primeng/api'
+import { ButtonModule } from 'primeng/button'
+import { CardModule } from 'primeng/card'
+import { Dialog } from 'primeng/dialog'
+import { DividerModule } from 'primeng/divider'
+import { DragDropModule } from 'primeng/dragdrop'
+import { MenubarModule } from 'primeng/menubar'
+import { map } from 'rxjs'
+
+import { Navigation } from '../../../../services/navigations/navigation.service'
+import { ThemeToggle } from '../../../../shared/components/ui/theme-toggle/theme-toggle'
+import { FormMode } from '../../../../shared/types/generic'
+import { AuthActions } from '../../../../store/auth/auth.actions'
+import { selectUser } from '../../../../store/auth/auth.selectors'
+import { AuthService } from '../../../../store/auth/auth.service'
+import { TasksActions } from '../../../../store/tasks/tasks.actions'
+import {
+  Tasks,
+  TasksFormValue,
+  TasksPayload,
+  TasksStatus,
+} from '../../../../store/tasks/tasks.model'
+import {
+  selectDoneTasks,
+  selectInProgressTasks,
+  selectTodoTasks,
+} from '../../../../store/tasks/tasks.selectors'
+import { UserActions } from '../../../../store/users/users.actions'
+import { selectAllUsers } from '../../../../store/users/users.selectors'
+import { TasksCard } from '../../components/task-card/tasks-card'
+import { TasksForm } from '../../components/task-form/tasks-form'
+
+@Component({
+  selector: 'app-board',
+  imports: [
+    AsyncPipe,
+    MenubarModule,
+    ButtonModule,
+    DragDropModule,
+    CardModule,
+    DividerModule,
+    TasksCard,
+    TasksForm,
+    ThemeToggle,
+    Dialog,
+  ],
+  templateUrl: './board.html',
+  styleUrl: './board.scss',
+})
+export class Board implements OnInit {
+  private store = inject(Store)
+  private actions$ = inject(Actions)
+  private destroyRef = inject(DestroyRef)
+  private message = inject(MessageService)
+  private authService = inject(AuthService)
+  private navigation = inject(Navigation)
+  private draggedTasks: Tasks | null = null
+  private readonly statusMap: Record<string, TasksStatus> = {
+    'To Do': TasksStatus.TODO,
+    'In Progress': TasksStatus.IN_PROGRESS,
+    Done: TasksStatus.DONE,
+  }
+
+  email$ = this.store.select(selectUser).pipe(map(state => state.email))
+  users$ = this.store.select(selectAllUsers)
+  todoTasks$ = this.store.select(selectTodoTasks)
+  inProgressTasks$ = this.store.select(selectInProgressTasks)
+  doneTasks$ = this.store.select(selectDoneTasks)
+
+  columns = [
+    { title: 'To Do', tasks: this.todoTasks$ },
+    { title: 'In Progress', tasks: this.inProgressTasks$ },
+    { title: 'Done', tasks: this.doneTasks$ },
+  ]
+  visible = false
+  mode: FormMode = 'create'
+  tasks: Tasks | null = null
+
+  constructor() {
+    this.initializeTaskSuccessListener()
+    this.initializeTaskFailureListener()
+  }
+
+  ngOnInit(): void {
+    this.store.dispatch(TasksActions.loadTasks())
+    this.store.dispatch(UserActions.loadUsers())
+  }
+
+  onLogout(): void {
+    this.store.dispatch(AuthActions.logout())
+  }
+
+  onDrop(_: DragEvent, column: string): void {
+    if (!this.draggedTasks) return
+
+    const newStatus = this.statusMap[column]
+    if (!newStatus) return
+    if (this.draggedTasks.status === newStatus) return
+
+    const payload: Tasks = { ...this.draggedTasks, status: newStatus }
+    this.store.dispatch(TasksActions.updateTasks({ tasks: payload }))
+  }
+
+  dragStart(tasks: Tasks): void {
+    this.draggedTasks = tasks
+  }
+
+  dragEnd(): void {
+    this.draggedTasks = null
+  }
+
+  onCreateTasksForm(): void {
+    this.visible = true
+    this.mode = 'create'
+    this.tasks = null
+  }
+
+  onEditTasksForm(tasks: Tasks): void {
+    this.visible = true
+    this.mode = 'update'
+    this.tasks = tasks
+  }
+
+  onDeleteTasks(tasks: Tasks): void {
+    this.store.dispatch(TasksActions.deleteTasks({ _id: tasks._id }))
+  }
+
+  onCloseTasksForm(): void {
+    this.visible = false
+  }
+
+  onTasksFormSubmit(tasks: TasksFormValue): void {
+    const userId = this.validateUserId()
+
+    if (this.mode === 'create') {
+      const payload: TasksPayload = {
+        title: tasks.title as string,
+        description: tasks.description || '',
+        status: tasks.status as TasksStatus,
+        assigneeId: tasks.assigneeId ?? null,
+        reporterId: userId as string,
+      }
+      this.store.dispatch(TasksActions.addTasks({ tasks: payload }))
+    }
+
+    if (this.mode === 'update') {
+      const tasksId = this.tasks?._id
+      if (!tasksId) return
+
+      const reporterId = this.tasks?.reporterId || userId
+      const payload: Tasks = {
+        _id: tasksId,
+        title: tasks.title as string,
+        description: tasks.description || '',
+        status: tasks.status as TasksStatus,
+        assigneeId: tasks.assigneeId ?? null,
+        reporterId: reporterId as string,
+      }
+
+      this.store.dispatch(TasksActions.updateTasks({ tasks: payload }))
+    }
+  }
+
+  private initializeTaskSuccessListener(): void {
+    this.actions$
+      .pipe(
+        ofType(
+          TasksActions.addTasksSuccess,
+          TasksActions.updateTasksSuccess,
+          TasksActions.deleteTasksSuccess
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(action => this.handleTaskSuccess(action))
+  }
+
+  private initializeTaskFailureListener(): void {
+    this.actions$
+      .pipe(
+        ofType(
+          TasksActions.addTasksFailure,
+          TasksActions.updateTasksFailure,
+          TasksActions.deleteTasksFailure
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(action => this.handleTaskError(action))
+  }
+
+  private handleTaskSuccess(action: { type: string }): void {
+    const messageMap: { [key: string]: string } = {
+      [TasksActions.addTasksSuccess.type]: 'Task added successfully',
+      [TasksActions.updateTasksSuccess.type]: 'Task updated successfully',
+      [TasksActions.deleteTasksSuccess.type]: 'Task deleted successfully',
+    }
+
+    this.showMessage('success', 'Success', messageMap[action.type])
+    this.visible = false
+  }
+
+  private handleTaskError(action: { error: string }): void {
+    this.showMessage('error', 'Error', action.error || 'Something went wrong')
+  }
+
+  private showMessage(severity: string, summary: string, detail: string) {
+    this.message.add({ severity, summary, detail })
+  }
+
+  private validateUserId(): string | void {
+    const userId = this.authService.getUser()?._id
+    if (!userId) {
+      this.authService.logout()
+      this.authService.clearAuthData()
+      this.navigation.goToLogin()
+      return
+    }
+
+    return userId as string
+  }
+}

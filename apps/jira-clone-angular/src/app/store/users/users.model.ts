@@ -5,7 +5,7 @@ export interface User {
 }
 
 export interface UserState {
-  user: User[]
+  users: User[]
   isLoading: boolean
   error: string | null
 }

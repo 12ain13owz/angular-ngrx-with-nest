@@ -7,24 +7,24 @@ import { JwtAuthGuard } from './jwt-auth.guard'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/register')
+  @Post('register')
   async register(@Request() req) {
     return await this.authService.register(req.body)
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('/login')
+  @Post('login')
   async login(@Request() req) {
     return await this.authService.login(req.user)
   }
 
-  @Post('/logout')
+  @Post('logout')
   async logout() {
     return await this.authService.logout()
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/profile')
+  @Get('profile')
   async getProfile(@Request() req) {
     return await this.authService.getProfile(req.user._id)
   }

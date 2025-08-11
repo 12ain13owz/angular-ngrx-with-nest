@@ -1,24 +1,24 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 
-import { Task } from './tasks.model'
+import { Tasks } from './tasks.model'
 
 export const TasksActions = createActionGroup({
   source: 'Tasks',
   events: {
     LoadTasks: emptyProps(),
-    LoadTasksSuccess: props<{ tasks: Task[] }>(),
+    LoadTasksSuccess: props<{ tasks: Tasks[] }>(),
     LoadTasksFailure: props<{ error: string }>(),
 
-    AddTask: props<{ task: Omit<Task, '_id'> }>(),
-    AddTaskSuccess: props<{ task: Task }>(),
-    AddTaskFailure: props<{ error: string }>(),
+    AddTasks: props<{ tasks: Omit<Tasks, '_id'> }>(),
+    AddTasksSuccess: props<{ tasks: Tasks }>(),
+    AddTasksFailure: props<{ error: string }>(),
 
-    UpdateTask: props<{ task: Partial<Task> & { _id: string } }>(),
-    UpdateTaskSuccess: props<{ task: Partial<Task> & { _id: string } }>(),
-    UpdateTaskFailure: props<{ error: string }>(),
+    UpdateTasks: props<{ tasks: Partial<Tasks> & { _id: string } }>(),
+    UpdateTasksSuccess: props<{ tasks: Partial<Tasks> & { _id: string } }>(),
+    UpdateTasksFailure: props<{ error: string }>(),
 
-    DeleteTask: props<{ _id: string }>(),
-    DeleteTaskSuccess: props<{ _id: string }>(),
-    DeleteTaskFailure: props<{ error: string }>(),
+    DeleteTasks: props<{ _id: string }>(),
+    DeleteTasksSuccess: props<{ _id: string }>(),
+    DeleteTasksFailure: props<{ error: string }>(),
   },
 })

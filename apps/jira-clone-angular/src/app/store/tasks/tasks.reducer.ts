@@ -22,34 +22,34 @@ export const tasksReducer = createReducer(
     isLoading: false,
     error: null,
   })),
-  on(TasksActions.addTask, state => ({
+  on(TasksActions.addTasks, state => ({
     ...state,
     tasks: [...state.tasks],
     isLoading: true,
   })),
-  on(TasksActions.addTaskSuccess, (state, { task }) => ({
+  on(TasksActions.addTasksSuccess, (state, { tasks }) => ({
     ...state,
-    tasks: [...state.tasks, task],
+    tasks: [...state.tasks, tasks],
     isLoading: false,
     error: null,
   })),
-  on(TasksActions.updateTask, state => ({
+  on(TasksActions.updateTasks, state => ({
     ...state,
     tasks: [...state.tasks],
     isLoading: true,
   })),
-  on(TasksActions.updateTaskSuccess, (state, { task }) => ({
+  on(TasksActions.updateTasksSuccess, (state, { tasks }) => ({
     ...state,
-    tasks: state.tasks.map(t => (t._id === task._id ? { ...t, ...task } : t)),
+    tasks: state.tasks.map(t => (t._id === tasks._id ? { ...t, ...tasks } : t)),
     isLoading: false,
     error: null,
   })),
-  on(TasksActions.deleteTask, state => ({
+  on(TasksActions.deleteTasks, state => ({
     ...state,
     tasks: [...state.tasks],
     isLoading: true,
   })),
-  on(TasksActions.deleteTaskSuccess, (state, { _id }) => ({
+  on(TasksActions.deleteTasksSuccess, (state, { _id }) => ({
     ...state,
     tasks: state.tasks.filter(t => t._id !== _id),
     isLoading: false,
@@ -57,9 +57,9 @@ export const tasksReducer = createReducer(
   })),
   on(
     TasksActions.loadTasksFailure,
-    TasksActions.addTaskFailure,
-    TasksActions.updateTaskFailure,
-    TasksActions.deleteTaskFailure,
+    TasksActions.addTasksFailure,
+    TasksActions.updateTasksFailure,
+    TasksActions.deleteTasksFailure,
     (state, { error }) => ({
       ...state,
       isLoading: false,

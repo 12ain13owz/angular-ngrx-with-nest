@@ -13,4 +13,10 @@ export const validationMessages = {
   name: {
     required: 'Name is required',
   },
+  title: {
+    required: 'Title is required',
+  },
+  status: {
+    required: 'Status is required',
+  },
 } as const

@@ -12,11 +12,19 @@ import { CardModule } from 'primeng/card'
 
 import { Input } from '../../../../shared/components/forms/input/input'
 import { validationMessages } from '../../../../shared/const/validations/validation.const'
+import { FormMarkAllAsTouched } from '../../../../shared/directives/form/form.directive'
 import { LoginFormControls, LoginFormValue } from '../../../../store/auth/auth.model'
 
 @Component({
   selector: 'app-login-form',
-  imports: [RouterModule, ReactiveFormsModule, CardModule, ButtonModule, Input],
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    Input,
+    FormMarkAllAsTouched,
+  ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
 })
@@ -46,9 +54,7 @@ export class LoginForm {
   }
 
   onSubmit() {
-    this.loginForm.markAllAsTouched()
     if (this.loginForm.invalid) return
-
     this.formSubmit.emit(this.loginForm.value)
   }
 }
