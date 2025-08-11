@@ -18,8 +18,8 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap((formValue: LoginFormValue) =>
         this.authService.login(formValue).pipe(
-          tap(res => this.authService.setAuthDate(res.data, res.accessToken)),
-          map(res => AuthActions.loginSuccess(res.data)),
+          tap(res => this.authService.setAuthDate(res.user, res.accessToken)),
+          map(res => AuthActions.loginSuccess(res.user)),
           catchError(error => of(AuthActions.loginFailure(error)))
         )
       )
@@ -31,7 +31,7 @@ export class AuthEffects {
       ofType(AuthActions.register),
       switchMap((formValue: LoginFormValue) =>
         this.authService.register(formValue).pipe(
-          map(res => AuthActions.registerSuccess(res.data)),
+          map(res => AuthActions.registerSuccess(res.user)),
           catchError(error => of(AuthActions.registerFailure(error)))
         )
       )

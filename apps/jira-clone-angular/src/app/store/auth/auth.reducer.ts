@@ -19,10 +19,10 @@ export const authReducer = createReducer(
     error: null,
   })),
 
-  on(AuthActions.loginSuccess, AuthActions.registerSuccess, (state, { _id, email }) => ({
+  on(AuthActions.loginSuccess, AuthActions.registerSuccess, (state, data) => ({
     ...state,
-    _id,
-    email,
+    _id: data._id,
+    email: data.email,
     isLoading: false,
     error: null,
   })),

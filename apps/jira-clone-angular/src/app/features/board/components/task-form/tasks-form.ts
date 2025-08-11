@@ -16,6 +16,7 @@ import {
   TasksFormControl,
   TasksFormValue,
   TasksStatus,
+  TasksWithReporterAndAssignee,
 } from '../../../../store/tasks/tasks.model'
 import { User } from '../../../../store/users/users.model'
 
@@ -39,7 +40,7 @@ export class TasksForm {
   private confirmationService = inject(ConfirmationService)
 
   mode = input<FormMode>('create')
-  tasks = input<Tasks | null>(null)
+  tasks = input<TasksWithReporterAndAssignee | null>(null)
   users = input<User[] | null>([])
   userOptions = computed(() => this.users()?.map(user => ({ label: user.name, value: user._id })))
   statusOptions = tasksStatusOptions
@@ -67,7 +68,7 @@ export class TasksForm {
     })
   }
 
-  private patchWithFormData(data: Tasks) {
+  private patchWithFormData(data: TasksWithReporterAndAssignee) {
     this.tasksForm.patchValue(data)
   }
 
@@ -100,6 +101,6 @@ export class TasksForm {
 
   onDeleteTasks(): void {
     if (!this.tasks()) return
-    this.deleteClicked.emit(this.tasks() as Tasks)
+    this.deleteClicked.emit(this.tasks() as TasksWithReporterAndAssignee)
   }
 }

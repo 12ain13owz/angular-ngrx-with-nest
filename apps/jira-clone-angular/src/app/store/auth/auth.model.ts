@@ -25,6 +25,6 @@ export type RegisterFormValue = FormGroup<RegisterFormControls>['value']
 export type RegisterFormPayload = Required<RegisterFormValue>
 
 export interface AuthResponse {
-  data: User
+  user: User
   accessToken: string
 }

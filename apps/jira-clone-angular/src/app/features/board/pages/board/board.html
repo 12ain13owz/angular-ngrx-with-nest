@@ -20,33 +20,46 @@
     </ng-template>
   </p-menubar>
 
-  <main class="flex-grow min-w-[900px] grid grid-cols-3 gap-4 overflow-auto px-4 py-6">
-    @for (column of columns; track column.title) {
-    <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event, column.title)">
-      @if (column.title === 'To Do') {
-      <ng-template #title>
-        <div class="flex justify-between items-center">
-          <span>{{ column.title }}</span>
-          <p-button
-            [rounded]="true"
-            icon="pi pi-plus"
-            variant="outlined"
-            size="small"
-            (click)="onCreateTasksForm()"
-          ></p-button>
-        </div>
-      </ng-template>
+  <div class="p-4 pb-0 flex justify-between items-center gap-4">
+    <p-button-group>
+      <p-button
+        [rounded]="false"
+        icon="pi pi-list"
+        label="All Tasks"
+        size="small"
+        [severity]="filterTasks() === 'all' ? 'primary' : 'secondary'"
+        (click)="setFilterTasks('all')"
+      ></p-button>
 
-      } @else {
+      <p-button
+        [rounded]="false"
+        icon="pi pi-user"
+        label="My Tasks"
+        size="small"
+        [severity]="filterTasks() === 'my' ? 'primary' : 'secondary'"
+        (click)="setFilterTasks('my')"
+      ></p-button>
+    </p-button-group>
+
+    <p-button
+      [rounded]="true"
+      icon="pi pi-plus"
+      variant="outlined"
+      size="small"
+      (click)="onCreateTasksForm()"
+    ></p-button>
+  </div>
+
+  <main class="p-4 flex-grow min-w-[900px] grid grid-cols-3 gap-4 overflow-auto">
+    @for (column of columns(); track column.title) {
+    <p-card class="border border-gray-600" pDroppable (onDrop)="onDrop($event, column.title)">
       <ng-template #title>{{ column.title }}</ng-template>
-      }
       <p-divider />
 
       @for (tasks of column.tasks | async; track tasks._id) {
       <app-tasks-card
         pDraggable
         [tasks]="tasks"
-        [users]="users$ | async"
         (onDragStart)="dragStart(tasks)"
         (onDragEnd)="dragEnd()"
         (editClicked)="onEditTasksForm($event)"

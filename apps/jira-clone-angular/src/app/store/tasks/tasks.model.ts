@@ -35,3 +35,8 @@ export interface TasksFormControl {
 
 export type TasksFormValue = FormGroup<TasksFormControl>['value']
 export type TasksPayload = Required<TasksFormValue> & { reporterId: string }
+
+export interface TasksWithReporterAndAssignee extends Tasks {
+  reporterName?: string | null
+  assigneeName?: string | null
+}

@@ -1,10 +1,11 @@
 import { AsyncPipe } from '@angular/common'
-import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
+import { ButtonGroupModule } from 'primeng/buttongroup'
 import { CardModule } from 'primeng/card'
 import { Dialog } from 'primeng/dialog'
 import { DividerModule } from 'primeng/divider'
@@ -16,7 +17,7 @@ import { Navigation } from '../../../../services/navigations/navigation.service'
 import { ThemeToggle } from '../../../../shared/components/ui/theme-toggle/theme-toggle'
 import { FormMode } from '../../../../shared/types/generic'
 import { AuthActions } from '../../../../store/auth/auth.actions'
-import { selectUser } from '../../../../store/auth/auth.selectors'
+import { selectAuthUser } from '../../../../store/auth/auth.selectors'
 import { AuthService } from '../../../../store/auth/auth.service'
 import { TasksActions } from '../../../../store/tasks/tasks.actions'
 import {
@@ -24,11 +25,13 @@ import {
   TasksFormValue,
   TasksPayload,
   TasksStatus,
+  TasksWithReporterAndAssignee,
 } from '../../../../store/tasks/tasks.model'
 import {
-  selectDoneTasks,
-  selectInProgressTasks,
-  selectTodoTasks,
+  selectTodoTasksWithReporterAndAssignee,
+  selectInProgressTasksWithReporterAndAssignee,
+  selectDoneTasksWithReporterAndAssignee,
+  selectMyTasks,
 } from '../../../../store/tasks/tasks.selectors'
 import { UserActions } from '../../../../store/users/users.actions'
 import { selectAllUsers } from '../../../../store/users/users.selectors'
@@ -41,6 +44,7 @@ import { TasksForm } from '../../components/task-form/tasks-form'
     AsyncPipe,
     MenubarModule,
     ButtonModule,
+    ButtonGroupModule,
     DragDropModule,
     CardModule,
     DividerModule,
@@ -59,27 +63,35 @@ export class Board implements OnInit {
   private message = inject(MessageService)
   private authService = inject(AuthService)
   private navigation = inject(Navigation)
-  private draggedTasks: Tasks | null = null
+  private draggedTasks: TasksWithReporterAndAssignee | null = null
   private readonly statusMap: Record<string, TasksStatus> = {
     'To Do': TasksStatus.TODO,
     'In Progress': TasksStatus.IN_PROGRESS,
     Done: TasksStatus.DONE,
   }
 
-  email$ = this.store.select(selectUser).pipe(map(state => state.email))
+  email$ = this.store.select(selectAuthUser).pipe(map(state => state.email))
   users$ = this.store.select(selectAllUsers)
-  todoTasks$ = this.store.select(selectTodoTasks)
-  inProgressTasks$ = this.store.select(selectInProgressTasks)
-  doneTasks$ = this.store.select(selectDoneTasks)
+  todoTasks$ = this.store.select(selectTodoTasksWithReporterAndAssignee)
+  inProgressTasks$ = this.store.select(selectInProgressTasksWithReporterAndAssignee)
+  doneTasks$ = this.store.select(selectDoneTasksWithReporterAndAssignee)
 
-  columns = [
-    { title: 'To Do', tasks: this.todoTasks$ },
-    { title: 'In Progress', tasks: this.inProgressTasks$ },
-    { title: 'Done', tasks: this.doneTasks$ },
-  ]
+  myTodoTasks$ = this.store
+    .select(selectMyTasks)
+    .pipe(map(tasks => tasks.filter(task => task.status === TasksStatus.TODO)))
+  myInProgressTasks$ = this.store
+    .select(selectMyTasks)
+    .pipe(map(tasks => tasks.filter(task => task.status === TasksStatus.IN_PROGRESS)))
+  myDoneTasks$ = this.store
+    .select(selectMyTasks)
+    .pipe(map(tasks => tasks.filter(task => task.status === TasksStatus.DONE)))
+
+  filterTasks = signal<'all' | 'my'>('all')
+  columns = computed(() => this.getColumns(this.filterTasks()))
+
   visible = false
   mode: FormMode = 'create'
-  tasks: Tasks | null = null
+  tasks: TasksWithReporterAndAssignee | null = null
 
   constructor() {
     this.initializeTaskSuccessListener()
@@ -87,8 +99,8 @@ export class Board implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(TasksActions.loadTasks())
     this.store.dispatch(UserActions.loadUsers())
+    this.store.dispatch(TasksActions.loadTasks())
   }
 
   onLogout(): void {
@@ -106,7 +118,7 @@ export class Board implements OnInit {
     this.store.dispatch(TasksActions.updateTasks({ tasks: payload }))
   }
 
-  dragStart(tasks: Tasks): void {
+  dragStart(tasks: TasksWithReporterAndAssignee): void {
     this.draggedTasks = tasks
   }
 
@@ -120,18 +132,22 @@ export class Board implements OnInit {
     this.tasks = null
   }
 
-  onEditTasksForm(tasks: Tasks): void {
+  onEditTasksForm(tasks: TasksWithReporterAndAssignee): void {
     this.visible = true
     this.mode = 'update'
     this.tasks = tasks
   }
 
-  onDeleteTasks(tasks: Tasks): void {
+  onDeleteTasks(tasks: TasksWithReporterAndAssignee): void {
     this.store.dispatch(TasksActions.deleteTasks({ _id: tasks._id }))
   }
 
   onCloseTasksForm(): void {
     this.visible = false
+  }
+
+  setFilterTasks(filter: 'all' | 'my'): void {
+    this.filterTasks.set(filter)
   }
 
   onTasksFormSubmit(tasks: TasksFormValue): void {
@@ -221,5 +237,22 @@ export class Board implements OnInit {
     }
 
     return userId as string
+  }
+
+  private getColumns(filter: 'all' | 'my') {
+    return [
+      {
+        title: 'To Do',
+        tasks: filter === 'all' ? this.todoTasks$ : this.myTodoTasks$,
+      },
+      {
+        title: 'In Progress',
+        tasks: filter === 'all' ? this.inProgressTasks$ : this.myInProgressTasks$,
+      },
+      {
+        title: 'Done',
+        tasks: filter === 'all' ? this.doneTasks$ : this.myDoneTasks$,
+      },
+    ]
   }
 }

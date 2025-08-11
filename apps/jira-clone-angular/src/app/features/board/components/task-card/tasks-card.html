@@ -29,7 +29,7 @@
       <i class="pi pi-user-edit text-sm"></i>
       <span class="text-xs font-medium">Reporter:</span>
       <p-message severity="secondary" variant="simple" size="small">
-        {{ reporter()?.name }}
+        {{ tasks().reporterName }}
       </p-message>
     </div>
 
@@ -38,7 +38,7 @@
       @if (tasks().assigneeId) {
       <span class="text-xs text-gray-500 font-medium">Assigned:</span>
       <p-message severity="secondary" variant="simple" size="small">
-        {{ assignee()?.name }}
+        {{ tasks().assigneeName }}
       </p-message>
       } @else {
       <span class="text-xs font-medium">Unassigned</span>
