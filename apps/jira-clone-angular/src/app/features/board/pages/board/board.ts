@@ -17,7 +17,7 @@ import { Navigation } from '../../../../services/navigations/navigation.service'
 import { ThemeToggle } from '../../../../shared/components/ui/theme-toggle/theme-toggle'
 import { FormMode } from '../../../../shared/types/generic'
 import { AuthActions } from '../../../../store/auth/auth.actions'
-import { selectAuthUser } from '../../../../store/auth/auth.selectors'
+import { selectAuthUser, selectCurrentUser } from '../../../../store/auth/auth.selectors'
 import { AuthService } from '../../../../store/auth/auth.service'
 import { TasksActions } from '../../../../store/tasks/tasks.actions'
 import {
@@ -70,6 +70,7 @@ export class Board implements OnInit {
     Done: TasksStatus.DONE,
   }
 
+  userId$ = this.store.select(selectCurrentUser)
   email$ = this.store.select(selectAuthUser).pipe(map(state => state.email))
   users$ = this.store.select(selectAllUsers)
   todoTasks$ = this.store.select(selectTodoTasksWithReporterAndAssignee)
@@ -92,8 +93,12 @@ export class Board implements OnInit {
   visible = false
   mode: FormMode = 'create'
   tasks: TasksWithReporterAndAssignee | null = null
+  userId: string | null = null
 
   constructor() {
+    this.userId$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(userId => (this.userId = userId))
     this.initializeTaskSuccessListener()
     this.initializeTaskFailureListener()
   }
@@ -228,10 +233,9 @@ export class Board implements OnInit {
   }
 
   private validateUserId(): string | void {
-    const userId = this.authService.getUser()?._id
+    const userId = this.userId
     if (!userId) {
       this.authService.logout()
-      this.authService.clearAuthData()
       this.navigation.goToLogin()
       return
     }

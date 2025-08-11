@@ -18,9 +18,21 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap((formValue: LoginFormValue) =>
         this.authService.login(formValue).pipe(
-          tap(res => this.authService.setAuthDate(res.user, res.accessToken)),
+          tap(res => this.authService.setAccessToken(res.accessToken)),
           map(res => AuthActions.loginSuccess(res.user)),
           catchError(error => of(AuthActions.loginFailure(error)))
+        )
+      )
+    )
+  )
+
+  loginWithToken$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(AuthActions.loginWithToken),
+      switchMap(({ token }) =>
+        this.authService.loginWithToken(token).pipe(
+          map(user => AuthActions.loginWithTokenSuccess(user)),
+          catchError(error => of(AuthActions.loginWithTokenFailure(error)))
         )
       )
     )
@@ -46,7 +58,7 @@ export class AuthEffects {
           map(() => AuthActions.logoutSuccess()),
           tap(() => this.navigation.goToLogin()),
           catchError(error => of(AuthActions.logoutFailure(error))),
-          finalize(() => this.authService.clearAuthData())
+          finalize(() => this.authService.removeAccessToken())
         )
       )
     )

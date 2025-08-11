@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
-import { inject, Injectable, signal } from '@angular/core'
-import { catchError, map, Observable, of } from 'rxjs'
+import { inject, Injectable } from '@angular/core'
+import { finalize, Observable } from 'rxjs'
 
 import {
   LoginFormPayload,
@@ -15,42 +15,17 @@ import { User } from '../users/users.model'
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient)
-
   private apiUrl = `${environment.apiUrl}/auth`
-  private user = signal<User | null>(null)
-  private accessToken = signal<string | null>(null)
-
-  getUser(): User | null {
-    return this.user()
-  }
-
-  setUser(user: User | null): void {
-    this.user.set(user)
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    if (this.user()) return of(true)
-
-    const accessToken = localStorage.getItem('accessToken')
-    if (!accessToken) return of(false)
-    this.accessToken.set(accessToken)
-
-    return this.loginWithToken(accessToken)
-  }
 
   getAccessToken(): string | null {
-    return this.accessToken()
+    return localStorage.getItem('accessToken')
   }
 
-  setAuthDate(user: User, accessToken: string): void {
-    this.user.set(user)
-    this.accessToken.set(accessToken)
-    localStorage.setItem('accessToken', accessToken)
+  setAccessToken(token: string): void {
+    localStorage.setItem('accessToken', token)
   }
 
-  clearAuthData(): void {
-    this.user.set(null)
-    this.accessToken.set(null)
+  removeAccessToken(): void {
     localStorage.removeItem('accessToken')
   }
 
@@ -72,18 +47,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, payload)
   }
 
-  private loginWithToken(token: string): Observable<boolean> {
+  loginWithToken(token: string): Observable<User> {
     const url = `${this.apiUrl}/profile`
-    return this.http.get<User>(url, { headers: { Authorization: `Bearer ${token}` } }).pipe(
-      map(res => {
-        this.setUser(res)
-        return true
-      }),
-      catchError(() => {
-        this.clearAuthData()
-        return of(false)
-      })
-    )
+    return this.http.get<User>(url, { headers: { Authorization: `Bearer ${token}` } })
   }
 
   register(formValue: RegisterFormValue): Observable<AuthResponse> {
@@ -94,6 +60,6 @@ export class AuthService {
 
   logout(): Observable<void> {
     const url = `${this.apiUrl}/logout`
-    return this.http.post<void>(url, {})
+    return this.http.post<void>(url, {}).pipe(finalize(() => this.removeAccessToken()))
   }
 }
