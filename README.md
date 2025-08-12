@@ -1,82 +1,132 @@
-# AngularNgrxWithNest
+# Angular Ngrx with NestJS (Basic Jira-Clone)
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A full-stack project to clone the core features of Jira, built as a monorepo with **Nx**. The application consists of a modern front-end using Angular and a robust back-end using NestJS, with data persisted in MongoDB.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### 🚀 **Front-end (Angular)**
 
-## Finish your remote caching setup
+- **User Interface**: Built with **PrimeNG** components and styled with **Tailwind CSS** for a clean, responsive design.
+- **State Management**: Uses **NgRx** to manage global application state efficiently.
+- **Task Management**: Create, read, update, and delete tasks with an intuitive UI.
+- **Comment System**: Add and manage comments on individual tasks.
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/yiqa66j8Lp)
+### ⚙️ **Back-end (NestJS)**
 
+- **Authentication**: Secure user authentication using **Passport.js** with a JWT strategy.
+- **RESTful API**: Provides a well-structured API for managing tasks and comments.
+- **CRUD Operations**: Complete Create, Read, Update, and Delete functionality for tasks and comments.
 
-## Run tasks
+### 💾 **Database (MongoDB)**
 
-To run the dev server for your app, use:
+- A NoSQL database for flexible and scalable data storage.
 
-```sh
-npx nx serve jira-clone
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [**Node.js**](https://nodejs.org/) (v18 or higher)
+- [**npm**](https://www.npmjs.com/)
+- [**Docker**](https://www.docker.com/) & [**Docker Compose**](https://docs.docker.com/compose/)
+
+### Installation
+
+1.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+2.  **Setup Environment Variables:**
+    Create a `.env` file by copying the provided example.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Modify the `.env` file based on the `.env.example` to set your database connection details and other configurations:
+
+    ```ini
+    # --- .env.example ---
+    PORT=3000
+
+    # Shared Configuration
+    MONGODB_USER=user_mongo
+    MONGODB_PASS=pass_mongo
+    MONGODB_DB=jira-clone
+    JWT_SECRET=c30b1155402a4b260c9541b6768b4546
+    JWT_EXPIRES_IN=60m
+
+    # Docker-specific Connection
+    MONGODB_URI_DOCKER=mongodb://mongo:27017
+
+    # Local-specific Connection
+    MONGODB_URI_LOCAL=mongodb://localhost:27017
+    ```
+
+---
+
+## How to Run
+
+### Option 1: Docker (Recommended for production and development)
+
+Use Docker Compose to run the entire application stack with a single command. This will set up the Angular, NestJS, and MongoDB services in separate containers.
+
+1.  **Start the services:**
+
+    ```bash
+    docker-compose up -d
+    ```
+
+    - The Angular front-end will be available at: `http://localhost:80`
+    - The NestJS back-end API will be available at: `http://localhost:3000`
+
+### Option 2: Local Development (Manual)
+
+This method requires a running MongoDB instance on your local machine.
+
+1.  **Start the MongoDB database:**
+    If you don't have MongoDB running locally, you can use Docker to start it:
+
+    ```bash
+    docker-compose up mongo -d
+    ```
+
+2.  **Run all services with a single command:**
+    Use `npm run dev` to start both the NestJS and Angular applications in development mode.
+
+    ```bash
+    npm run dev
+    ```
+
+    - The Angular front-end will be available at: `http://localhost:4200`
+    - The NestJS back-end API will be available at: `http://localhost:3000`
+
+### **`npm run dev` Script**
+
+For the `npm run dev` command to work correctly, please ensure your `package.json` file includes the following script:
+
+```json
+"scripts": {
+  "dev": "nx run-many --target=serve --projects=jira-clone-angular,jira-clone-nest --parallel"
+},
 ```
 
-To create a production bundle:
+## Project Structure
 
-```sh
-npx nx build jira-clone
-```
+This project is a monorepo managed by Nx. The key directories are:
 
-To see all available targets to run for a project, run:
+- apps/: Contains the main applications.
+- jira-clone-angular/: The Angular front-end application.
+- jira-clone-nest/: The NestJS back-end application.
 
-```sh
-npx nx show project jira-clone
-```
+## Resource
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Angular Official Documentation](https://angular.dev/)
+- [Ngrx Official Documentation](https://ngrx.io/)
+- [NestJS Official Documentation](https://nestjs.com/)
+- [NX Official Documentation](https://nx.dev/)
+- [PrimeNG UI Official Documentation](https://primeng.org/)
+- [TailwindCSS Official Documentation](https://tailwindcss.com/)
