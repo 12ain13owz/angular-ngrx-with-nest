@@ -21,11 +21,6 @@ export interface TasksState {
   error: string | null
 }
 
-export interface TasksResponse {
-  tasks: Tasks[]
-  count: number
-}
-
 export interface TasksFormControl {
   title: FormControl<string>
   description: FormControl<string>

@@ -20,7 +20,7 @@
     </ng-template>
   </p-menubar>
 
-  <div class="p-4 pb-0 flex justify-between items-center gap-4">
+  <div class="p-4 pb-0 flex items-center gap-4">
     <p-button-group>
       <p-button
         [rounded]="false"
@@ -93,5 +93,15 @@
     (cancelClicked)="onCloseTasksForm()"
     (deleteClicked)="onDeleteTasks($event)"
   ></app-tasks-form>
+  <p-divider></p-divider>
+
+  <app-task-comment-form
+    [mode]="'create'"
+    [comment]="null"
+    [comments]="comments$ | async"
+    (formSubmit)="onCommentFormSubmit($event)"
+    (editClicked)="onEditCommentForm($event)"
+    (deleteClicked)="onDeleteComment($event)"
+  ></app-task-comment-form>
   }
 </p-dialog>

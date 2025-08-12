@@ -1,0 +1,24 @@
+<h3 class="mb-4 text-xl font-bold">Comment ({{ comments()?.length }})</h3>
+
+<div class="flex flex-col gap-y-3">
+  @for (comment of comments(); track comment._id) {
+  <app-comment-list
+    [comment]="comment"
+    (saveClicked)="onEdit($event)"
+    (deleteClicked)="onDelete($event)"
+  ></app-comment-list>
+  }
+</div>
+<p-divider></p-divider>
+
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-y-4">
+  <app-text-area
+    [id]="'content'"
+    [label]="'Comment'"
+    [control]="commentForm.controls.content"
+  ></app-text-area>
+
+  <div class="flex justify-end">
+    <p-button type="submit" label="Add Comment" severity="help"></p-button>
+  </div>
+</form>

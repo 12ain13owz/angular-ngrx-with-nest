@@ -25,4 +25,11 @@ export class CommentsService {
       .exec()
     return new CommentResponseDto(updatedComment)
   }
+
+  async delete(taskId: string, commentId: string): Promise<CommentResponseDto> {
+    const deletedComment = await this.commentModel
+      .findByIdAndDelete({ _id: commentId, taskId })
+      .exec()
+    return new CommentResponseDto(deletedComment)
+  }
 }

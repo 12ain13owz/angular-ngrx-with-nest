@@ -22,7 +22,7 @@ export const tasksReducer = createReducer(
     isLoading: false,
     error: null,
   })),
-  on(TasksActions.addTasks, state => ({
+  on(TasksActions.addTasks, TasksActions.updateTasks, TasksActions.deleteTasks, state => ({
     ...state,
     tasks: [...state.tasks],
     isLoading: true,
@@ -33,21 +33,11 @@ export const tasksReducer = createReducer(
     isLoading: false,
     error: null,
   })),
-  on(TasksActions.updateTasks, state => ({
-    ...state,
-    tasks: [...state.tasks],
-    isLoading: true,
-  })),
   on(TasksActions.updateTasksSuccess, (state, { tasks }) => ({
     ...state,
     tasks: state.tasks.map(t => (t._id === tasks._id ? { ...t, ...tasks } : t)),
     isLoading: false,
     error: null,
-  })),
-  on(TasksActions.deleteTasks, state => ({
-    ...state,
-    tasks: [...state.tasks],
-    isLoading: true,
   })),
   on(TasksActions.deleteTasksSuccess, (state, { _id }) => ({
     ...state,

@@ -19,6 +19,9 @@ import { FormMode } from '../../../../shared/types/generic'
 import { AuthActions } from '../../../../store/auth/auth.actions'
 import { selectAuthUser, selectCurrentUser } from '../../../../store/auth/auth.selectors'
 import { AuthService } from '../../../../store/auth/auth.service'
+import { CommentsActions } from '../../../../store/comments/comments.actions'
+import { CommentFormValue, CommentWithAuthName } from '../../../../store/comments/comments.model'
+import { selectCommentsWithAuthorDetails } from '../../../../store/comments/comments.selectors'
 import { TasksActions } from '../../../../store/tasks/tasks.actions'
 import {
   Tasks,
@@ -36,6 +39,7 @@ import {
 import { UserActions } from '../../../../store/users/users.actions'
 import { selectAllUsers } from '../../../../store/users/users.selectors'
 import { TasksCard } from '../../components/task-card/tasks-card'
+import { TaskCommentForm } from '../../components/task-comment-form/task-comment-form'
 import { TasksForm } from '../../components/task-form/tasks-form'
 
 @Component({
@@ -50,6 +54,7 @@ import { TasksForm } from '../../components/task-form/tasks-form'
     DividerModule,
     TasksCard,
     TasksForm,
+    TaskCommentForm,
     ThemeToggle,
     Dialog,
   ],
@@ -87,6 +92,8 @@ export class Board implements OnInit {
     .select(selectMyTasks)
     .pipe(map(tasks => tasks.filter(task => task.status === TasksStatus.DONE)))
 
+  comments$ = this.store.select(selectCommentsWithAuthorDetails)
+
   filterTasks = signal<'all' | 'my'>('all')
   columns = computed(() => this.getColumns(this.filterTasks()))
 
@@ -94,11 +101,13 @@ export class Board implements OnInit {
   mode: FormMode = 'create'
   tasks: TasksWithReporterAndAssignee | null = null
   userId: string | null = null
+  email: string | null = null
 
   constructor() {
     this.userId$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(userId => (this.userId = userId))
+    this.email$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(email => (this.email = email))
     this.initializeTaskSuccessListener()
     this.initializeTaskFailureListener()
   }
@@ -141,6 +150,8 @@ export class Board implements OnInit {
     this.visible = true
     this.mode = 'update'
     this.tasks = tasks
+
+    this.store.dispatch(CommentsActions.loadComments({ taskId: this.tasks._id }))
   }
 
   onDeleteTasks(tasks: TasksWithReporterAndAssignee): void {
@@ -185,6 +196,29 @@ export class Board implements OnInit {
 
       this.store.dispatch(TasksActions.updateTasks({ tasks: payload }))
     }
+  }
+
+  onCommentFormSubmit(comment: CommentFormValue): void {
+    const taskId = this.validateTaskId()
+    this.store.dispatch(
+      CommentsActions.addComment({ taskId: taskId as string, content: comment.content || '' })
+    )
+  }
+
+  onEditCommentForm(comment: CommentWithAuthName): void {
+    this.store.dispatch(
+      CommentsActions.updateComment({
+        taskId: comment.taskId,
+        commentId: comment._id,
+        content: comment.content,
+      })
+    )
+  }
+
+  onDeleteComment(comment: CommentWithAuthName): void {
+    this.store.dispatch(
+      CommentsActions.deleteComment({ taskId: comment.taskId, commentId: comment._id })
+    )
   }
 
   private initializeTaskSuccessListener(): void {
@@ -241,6 +275,16 @@ export class Board implements OnInit {
     }
 
     return userId as string
+  }
+
+  private validateTaskId(): string | void {
+    const taskId = this.tasks?._id
+    if (!taskId) {
+      this.showMessage('error', 'Error', 'Task not found')
+      return
+    }
+
+    return taskId as string
   }
 
   private getColumns(filter: 'all' | 'my') {
