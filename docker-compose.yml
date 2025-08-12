@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # Angular Frontend Service
+  jira-clone-angular:
+    container_name: jira-clone-angular
+    build:
+      context: .
+      dockerfile: apps/jira-clone-angular/Dockerfile
+    ports:
+      - "80:80"
+
+  # NestJS Backend Service
+  jira-clone-nest:
+    container_name: jira-clone-nest
+    build:
+      context: .
+      dockerfile: apps/jira-clone-nest/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    env_file:
+      - ./.env
+
+  # MongoDB Database Service
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user_mongo
+      MONGO_INITDB_ROOT_PASSWORD: pass_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+
+# Docker Volumes
+volumes:
+  mongo-data:
+  mongo-config:

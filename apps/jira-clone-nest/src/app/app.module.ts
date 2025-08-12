@@ -13,7 +13,11 @@ const configOptions: ConfigModuleOptions = {
   isGlobal: true,
 }
 
-const mongooseUri = process.env.MONGODB_URI
+const mongoUri =
+  process.env.NODE_ENV === 'production'
+    ? process.env.MONGODB_URI_DOCKER
+    : process.env.MONGODB_URI_LOCAL
+
 const mongooseOptions: MongooseModuleOptions = {
   user: process.env.MONGODB_USER,
   pass: process.env.MONGODB_PASS,
@@ -23,7 +27,7 @@ const mongooseOptions: MongooseModuleOptions = {
 @Module({
   imports: [
     ConfigModule.forRoot(configOptions),
-    MongooseModule.forRoot(mongooseUri, mongooseOptions),
+    MongooseModule.forRoot(mongoUri, mongooseOptions),
     AuthModule,
     UserModule,
     TasksModule,
