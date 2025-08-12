@@ -93,8 +93,9 @@
     (cancelClicked)="onCloseTasksForm()"
     (deleteClicked)="onDeleteTasks($event)"
   ></app-tasks-form>
-  <p-divider></p-divider>
 
+  @if (mode === 'update') {
+  <p-divider></p-divider>
   <app-task-comment-form
     [mode]="'create'"
     [comment]="null"
@@ -103,5 +104,5 @@
     (editClicked)="onEditCommentForm($event)"
     (deleteClicked)="onDeleteComment($event)"
   ></app-task-comment-form>
-  }
+  } }
 </p-dialog>
