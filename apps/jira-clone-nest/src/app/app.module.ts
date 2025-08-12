@@ -6,6 +6,7 @@ import { AppService } from './app.service'
 import { AuthModule } from './features/auth/auth.module'
 import { UserModule } from './features/user/user.module'
 import { TasksModule } from './features/tasks/tasks.module'
+import { CommentsModule } from './features/comments/comments.module'
 
 const configOptions: ConfigModuleOptions = {
   envFilePath: '.env',
@@ -26,6 +27,7 @@ const mongooseOptions: MongooseModuleOptions = {
     AuthModule,
     UserModule,
     TasksModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

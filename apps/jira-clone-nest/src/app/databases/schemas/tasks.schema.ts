@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Types } from 'mongoose'
+import { Document, ObjectId } from 'mongoose'
 import { TaskStatus } from '../types/tasks.type'
 
 @Schema({ timestamps: true })
 export class Tasks {
-  _id?: Types.ObjectId
+  _id?: ObjectId
 
   @Prop()
   title: string

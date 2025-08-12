@@ -28,13 +28,3 @@ export class TaskResponseDto {
     this.assigneeId = task.assigneeId
   }
 }
-
-export class TasksResponseDto {
-  tasks: TaskResponseDto[]
-  count: number
-
-  constructor(tasks: TasksDocument[]) {
-    this.tasks = tasks.map(task => new TaskResponseDto(task))
-    this.count = tasks.length
-  }
-}

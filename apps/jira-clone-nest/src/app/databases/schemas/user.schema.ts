@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Types } from 'mongoose'
+import { Document, ObjectId } from 'mongoose'
 import { hashSync } from 'bcrypt'
 
 @Schema({ timestamps: true })
 export class User {
-  _id?: Types.ObjectId
+  _id?: ObjectId
 
   @Prop({ required: true, unique: true })
   email: string

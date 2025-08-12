@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateTaskDto, TaskResponseDto, TasksResponseDto, UpdateTaskDto } from './dto/tasks.dto'
+import { CreateTaskDto, TaskResponseDto, UpdateTaskDto } from './dto/tasks.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Tasks, TasksDocument } from '../../databases/schemas/tasks.schema'
@@ -13,9 +13,9 @@ export class TasksService {
     return new TaskResponseDto(newTask)
   }
 
-  async findAll(): Promise<TasksResponseDto | []> {
+  async findAll(): Promise<TaskResponseDto[]> {
     const tasks = await this.taskModel.find().exec()
-    return new TasksResponseDto(tasks)
+    return tasks.map(task => new TaskResponseDto(task))
   }
 
   async findOne(id: string): Promise<TaskResponseDto | null | NotFoundException> {
