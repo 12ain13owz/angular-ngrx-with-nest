@@ -7,7 +7,8 @@
   "semi": false,
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "htmlWhitespaceSensitivity": "ignore",
+  "htmlWhitespaceSensitivity": "css",
+  "proseWrap": "preserve",
   "overrides": [
     {
       "files": "*.html",

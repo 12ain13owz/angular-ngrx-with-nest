@@ -10,7 +10,7 @@
     <div class="flex justify-between gap-2">
       <div class="flex items-center gap-x-3">
         <div class="font-medium text-md">{{ comment()?.authorName }}</div>
-        <div class="text-sm">{{ comment()?.createdAt | date : 'medium' }}</div>
+        <div class="text-sm">{{ comment()?.createdAt | date: 'medium' }}</div>
       </div>
 
       <div class="flex items-center">
@@ -36,29 +36,28 @@
     </div>
 
     @if (isEdit()) {
-    <form [formGroup]="commentForm" (ngSubmit)="onSave()" class="flex flex-col gap-y-4">
-      <app-text-area
-        [id]="'content'"
-        [label]="'Comment'"
-        [control]="commentForm.controls.content"
-        [rows]="2"
-      ></app-text-area>
-      <div class="flex justify-end gap-4">
-        <p-button
-          type="button"
-          label="Cancel"
-          variant="text"
-          severity="secondary"
-          (click)="onCancel()"
-        ></p-button>
-        <p-button type="submit" label="Save" severity="help"></p-button>
-      </div>
-    </form>
+      <form [formGroup]="commentForm" (ngSubmit)="onSave()" class="flex flex-col gap-y-4">
+        <app-text-area
+          [id]="'content'"
+          [label]="'Comment'"
+          [control]="commentForm.controls.content"
+          [rows]="2"
+        ></app-text-area>
+        <div class="flex justify-end gap-4">
+          <p-button
+            type="button"
+            label="Cancel"
+            variant="text"
+            severity="secondary"
+            (click)="onCancel()"
+          ></p-button>
+          <p-button type="submit" label="Save" severity="help"></p-button>
+        </div>
+      </form>
     } @else {
-
-    <div class="mt-2 text-sm whitespace-pre-line">
-      {{ comment()?.content }}
-    </div>
+      <div class="mt-2 text-sm whitespace-pre-line">
+        {{ comment()?.content }}
+      </div>
     }
   </div>
 </div>

@@ -14,14 +14,14 @@
     ></app-select>
 
     @if (mode() === 'update') {
-    <app-select
-      [id]="'status'"
-      [label]="'Status'"
-      [control]="tasksForm.controls.status"
-      [errorMessage]="validateMessage.status"
-      [options]="statusOptions"
-      class="flex-1"
-    ></app-select>
+      <app-select
+        [id]="'status'"
+        [label]="'Status'"
+        [control]="tasksForm.controls.status"
+        [errorMessage]="validateMessage.status"
+        [options]="statusOptions"
+        class="flex-1"
+      ></app-select>
     }
   </div>
 
@@ -40,26 +40,26 @@
   ></app-text-area>
 
   @if (mode() === 'create') {
-  <div class="flex justify-end gap-2">
-    <p-button label="Cancel" [text]="true" severity="secondary" (click)="onCancel()" />
-    <p-button type="submit" label="Submit" />
-  </div>
-  } @else {
-  <div class="flex justify-between">
-    <div>
-      <p-confirmpopup />
-      <p-button
-        label="Delete"
-        severity="danger"
-        [outlined]="true"
-        (click)="onConfirmDelete($event)"
-      ></p-button>
-    </div>
-
-    <div class="flex gap-2">
+    <div class="flex justify-end gap-2">
       <p-button label="Cancel" [text]="true" severity="secondary" (click)="onCancel()" />
       <p-button type="submit" label="Submit" />
     </div>
-  </div>
+  } @else {
+    <div class="flex justify-between">
+      <div>
+        <p-confirmpopup />
+        <p-button
+          label="Delete"
+          severity="danger"
+          [outlined]="true"
+          (click)="onConfirmDelete($event)"
+        ></p-button>
+      </div>
+
+      <div class="flex gap-2">
+        <p-button label="Cancel" [text]="true" severity="secondary" (click)="onCancel()" />
+        <p-button type="submit" label="Submit" />
+      </div>
+    </div>
   }
 </form>

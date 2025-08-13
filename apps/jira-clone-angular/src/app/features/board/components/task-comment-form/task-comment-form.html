@@ -2,11 +2,11 @@
 
 <div class="flex flex-col gap-y-3">
   @for (comment of comments(); track comment._id) {
-  <app-comment-list
-    [comment]="comment"
-    (saveClicked)="onEdit($event)"
-    (deleteClicked)="onDelete($event)"
-  ></app-comment-list>
+    <app-comment-list
+      [comment]="comment"
+      (saveClicked)="onEdit($event)"
+      (deleteClicked)="onDelete($event)"
+    ></app-comment-list>
   }
 </div>
 <p-divider></p-divider>

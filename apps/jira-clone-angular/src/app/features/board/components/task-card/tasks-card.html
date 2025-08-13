@@ -3,7 +3,7 @@
   [ngClass]="{
     'border-l-blue-500 bg-blue-50/50 hover:bg-blue-100/80': tasks().status === 'TODO',
     'border-l-yellow-500 bg-yellow-50/50 hover:bg-yellow-100/80': tasks().status === 'IN_PROGRESS',
-    'border-l-green-500 bg-green-50/50 hover:bg-green-100/80': tasks().status === 'DONE'
+    'border-l-green-500 bg-green-50/50 hover:bg-green-100/80': tasks().status === 'DONE',
   }"
 >
   <div class="flex flex-col gap-y-3">
@@ -37,12 +37,12 @@
     <div class="flex items-center gap-2 text-gray-500">
       <i class="pi pi-user-plus text-sm"></i>
       @if (tasks().assigneeId) {
-      <span class="text-xs text-gray-500 font-medium">Assigned:</span>
-      <p-message severity="secondary" variant="simple" size="small">
-        {{ tasks().assigneeName }}
-      </p-message>
+        <span class="text-xs text-gray-500 font-medium">Assigned:</span>
+        <p-message severity="secondary" variant="simple" size="small">
+          {{ tasks().assigneeName }}
+        </p-message>
       } @else {
-      <span class="text-xs font-medium">Unassigned</span>
+        <span class="text-xs font-medium">Unassigned</span>
       }
     </div>
   </div>
