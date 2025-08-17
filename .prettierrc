@@ -9,6 +9,7 @@
   "arrowParens": "avoid",
   "htmlWhitespaceSensitivity": "css",
   "proseWrap": "preserve",
+  "plugins": ["prettier-plugin-tailwindcss"],
   "overrides": [
     {
       "files": "*.html",

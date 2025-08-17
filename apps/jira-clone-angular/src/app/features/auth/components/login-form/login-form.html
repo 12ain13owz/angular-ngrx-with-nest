@@ -1,10 +1,10 @@
-<div class="h-screen flex items-center justify-center">
+<div class="flex h-screen items-center justify-center">
   <p-card header="Login" class="w-full max-w-md">
     <form
       [formGroup]="loginForm"
       (ngSubmit)="onSubmit()"
       appMarkAllAsTouched
-      class="flex flex-col gap-4 mt-4"
+      class="mt-4 flex flex-col gap-4"
     >
       <app-input
         [id]="'email'"
@@ -29,7 +29,7 @@
       ></p-button>
     </form>
 
-    <div class="mt-8 flex justify-center items-center">
+    <div class="mt-8 flex items-center justify-center">
       Don't have an account?
       <a [routerLink]="link()">
         <p-button label="Register" link severity="info" />

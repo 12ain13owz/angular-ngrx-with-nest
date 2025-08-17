@@ -1,5 +1,5 @@
 <p-card
-  class="mb-4 cursor-move hover:shadow-lg hover:-translate-y-1 transition-all duration-200 border border-gray-600 border-l-4 rounded-lg"
+  class="mb-4 cursor-move rounded-lg border border-l-4 border-gray-600 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
   [ngClass]="{
     'border-l-blue-500 bg-blue-50/50 hover:bg-blue-100/80': tasks().status === 'TODO',
     'border-l-yellow-500 bg-yellow-50/50 hover:bg-yellow-100/80': tasks().status === 'IN_PROGRESS',
@@ -7,7 +7,7 @@
   }"
 >
   <div class="flex flex-col gap-y-3">
-    <div class="flex justify-between items-center">
+    <div class="flex items-center justify-between">
       <p-tag [value]="tasks().title" [severity]="getTagSeverity()"></p-tag>
       <p-button
         type="button"
@@ -37,7 +37,7 @@
     <div class="flex items-center gap-2 text-gray-500">
       <i class="pi pi-user-plus text-sm"></i>
       @if (tasks().assigneeId) {
-        <span class="text-xs text-gray-500 font-medium">Assigned:</span>
+        <span class="text-xs font-medium text-gray-500">Assigned:</span>
         <p-message severity="secondary" variant="simple" size="small">
           {{ tasks().assigneeName }}
         </p-message>

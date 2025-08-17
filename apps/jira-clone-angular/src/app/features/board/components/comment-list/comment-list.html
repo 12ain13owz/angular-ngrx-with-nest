@@ -1,4 +1,4 @@
-<div class="flex gap-4 items-start px-4 py-2 rounded-lg shadow-sm">
+<div class="flex items-start gap-4 rounded-lg px-4 py-2 shadow-sm">
   <p-avatar
     [label]="comment()?.authorName?.substring(0, 1)"
     shape="circle"
@@ -9,7 +9,7 @@
   <div class="flex-1">
     <div class="flex justify-between gap-2">
       <div class="flex items-center gap-x-3">
-        <div class="font-medium text-md">{{ comment()?.authorName }}</div>
+        <div class="text-md font-medium">{{ comment()?.authorName }}</div>
         <div class="text-sm">{{ comment()?.createdAt | date: 'medium' }}</div>
       </div>
 
